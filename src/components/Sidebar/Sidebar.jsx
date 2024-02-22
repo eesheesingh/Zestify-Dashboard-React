@@ -96,6 +96,18 @@ const Sidebar = ({ onPageChange }) => {
                 <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Settings</span>
               </button>
             </li>
+            <li>
+              <button
+                onClick={() => {
+                  onPageChange('explore');
+                  closeSidebar();
+                }}
+                className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
+              >
+                <IoSettingsOutline className='text-2xl' />
+                <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Explore</span>
+              </button>
+            </li>
           </ul>
 
           {/* Sign out button */}

@@ -1,0 +1,36 @@
+.explore-container {
+    margin: 0; /* Remove margin from all sides */
+  }
+  
+  .explore-header {
+    background-color: #ffffff; /* White background */
+    padding: 1.5rem 1rem; /* Add padding to the header */
+
+  }
+  
+  .explore-header h1 {
+    color: #1a202c; /* Dark text color for the heading */
+  }
+
+  .secondary-div{
+    border-bottom: 1px solid #e5e5e5; /* Light border at the bottom */
+
+  }
+
+  .exploreButton{
+    padding: 0.75rem 1rem;
+    border: 1px solid #000;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+.exploreButton svg{
+    color: 1.5px solid rgba(142, 146, 188, 1)
+}
+
+  .exploreButtons{
+    gap: 1rem;
+  }
