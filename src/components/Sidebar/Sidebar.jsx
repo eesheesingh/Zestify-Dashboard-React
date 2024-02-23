@@ -103,10 +103,7 @@ const Sidebar = () => {
           </button>
         </div>
       </aside>
-      <div className="dashboard-container p-0">
-      {/* Dashboard Header */}
-        <Outlet />
-      </div>
+      <Outlet />
     </>
   );
 };
