@@ -68,7 +68,7 @@ const Sidebar = () => {
           </a>
           <ul className="sidebar-menu space-y-4 font-medium">
             <li>
-              <Link to="/dashboard"
+              <Link to="/"
                 className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
               >
                 <RxDashboard className='text-2xl' />
@@ -103,10 +103,7 @@ const Sidebar = () => {
           </button>
         </div>
       </aside>
-      <div className="dashboard-container p-0">
-      {/* Dashboard Header */}
-        <Outlet />
-      </div>
+      <Outlet />
     </>
   );
 };
