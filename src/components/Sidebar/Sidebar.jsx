@@ -96,7 +96,7 @@ const Sidebar = () => {
           {/* Sign out button */}
           <button
             className="sign-out-button flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
-            onClick={() => alert('Sign out clicked')} // Replace this with your sign-out logic
+            onClick={() => alert('Sign out clicked')}
           >
             <BiLogOut className='text-2xl' />
             <span className="text-base font-bold ms-3">Sign Out</span>
