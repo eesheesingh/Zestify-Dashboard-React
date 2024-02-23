@@ -1,13 +1,13 @@
 // Sidebar.jsx
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { BiLogOut } from 'react-icons/bi';
 import { RxDashboard } from 'react-icons/rx';
 import { IoSettingsOutline } from 'react-icons/io5';
 import './Sidebar.css';
-import Logo from '../../assets/Vector.svg'
+import Logo from '../../assets/Vector.svg';
+import { Link, Outlet } from 'react-router-dom';
 
-
-const Sidebar = ({ onPageChange }) => {
+const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef();
 
@@ -19,19 +19,13 @@ const Sidebar = ({ onPageChange }) => {
     setIsSidebarOpen(false);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        closeSidebar();
-      }
-    };
+  const handleClickOutside = (event) => {
+    if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+      closeSidebar();
+    }
+  };
 
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  document.addEventListener('mousedown', handleClickOutside);
 
   return (
     <>
@@ -64,7 +58,7 @@ const Sidebar = ({ onPageChange }) => {
         aria-label="Sidebar"
       >
         <div className="sidebar-content h-full px-7 py-4 overflow-y-auto bg-gray-50">
-          <a href="https://flowbite.com/" className="brand-logo flex items-center ps-2.5 mb-5 pb-6 py-3">
+          <a href="" className="brand-logo flex items-center ps-2.5 mb-5 pb-6 py-3">
             <img
               src={Logo}
               className="h-10 me-3 sm:h-10"
@@ -74,40 +68,28 @@ const Sidebar = ({ onPageChange }) => {
           </a>
           <ul className="sidebar-menu space-y-4 font-medium">
             <li>
-              <button
-                onClick={() => {
-                  onPageChange('dashboard');
-                  closeSidebar();
-                }}
+              <Link to="/dashboard"
                 className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
               >
                 <RxDashboard className='text-2xl' />
                 <span className="text-base font-bold ms-3">Dashboard</span>
-              </button>
+              </Link>
             </li>
             <li>
-              <button
-                onClick={() => {
-                  onPageChange('settings');
-                  closeSidebar();
-                }}
-                className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
-              >
-                <IoSettingsOutline className='text-2xl' />
-                <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Settings</span>
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => {
-                  onPageChange('explore');
-                  closeSidebar();
-                }}
+              <Link to="/explore"
                 className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
               >
                 <IoSettingsOutline className='text-2xl' />
                 <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Explore</span>
-              </button>
+              </Link>
+            </li>
+            <li>
+              <Link to="/setting"
+                className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
+              >
+                <IoSettingsOutline className='text-2xl' />
+                <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Settings</span>
+              </Link>
             </li>
           </ul>
 
@@ -121,6 +103,10 @@ const Sidebar = ({ onPageChange }) => {
           </button>
         </div>
       </aside>
+      <div className="dashboard-container p-0">
+      {/* Dashboard Header */}
+        <Outlet />
+      </div>
     </>
   );
 };
