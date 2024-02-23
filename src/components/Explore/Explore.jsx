@@ -13,6 +13,7 @@ import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 
 import profileImage from "../../assets/an-avatar-of-a-brown-guy-looking-at-you-with-cute-smiles-with-transparent-background-hes-wearing-a-627855248.png";
+import { useNavigate } from "react-router-dom";
 
 const CustomButton = ({ onClick }) => {
   return (
@@ -35,6 +36,7 @@ const CustomButton = ({ onClick }) => {
 };
 
 const Explore = () => {
+  const navigate = useNavigate();
   const [hasNotification, setHasNotification] = useState(true);
 
   const [state, setState] = useState([
@@ -147,7 +149,7 @@ const Explore = () => {
 
       {/* Back Button */}
       <div className="back-button flex items-center text-2xl font-bold p-6">
-        <FaAngleLeft />
+        <button onClick={() => navigate("/dashboard")}><FaAngleLeft /></button>
         <span className="ml-1">Back</span>
       </div>
 
