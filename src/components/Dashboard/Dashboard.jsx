@@ -1,5 +1,6 @@
 // Dashboard.jsx
 import { useState } from "react";
+import PropTypes from "prop-types";
 import "./Dashboard.css";
 import { UilSearch } from "@iconscout/react-unicons";
 import { LuBell } from "react-icons/lu";
@@ -11,25 +12,33 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import { addDays } from "date-fns";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import Button from '@mui/material/Button';
-import Popover from '@mui/material/Popover';
+import Button from "@mui/material/Button";
+import Popover from "@mui/material/Popover";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { MdKeyboardArrowDown } from "react-icons/md";
-
-
-
+import { useNavigate } from "react-router-dom";
 
 const CustomButton = ({ onClick }) => {
   return (
-    <Button onClick={onClick} style={{ backgroundColor: "transparent", color: "#4a5568", border: "1px solid #4a5568", borderRadius:"8px"  }}>
+    <Button
+      onClick={onClick}
+      style={{
+        backgroundColor: "transparent",
+        color: "#4a5568",
+        border: "1px solid #4a5568",
+        borderRadius: "8px",
+      }}
+    >
       <BsCalendarDateFill />
-      <span style={{ marginLeft: "0.5rem", textTransform: "none"}}>Date Range</span>
+      <span style={{ marginLeft: "0.5rem", textTransform: "none" }}>
+        Date Range
+      </span>
       <MdKeyboardArrowDown />
     </Button>
   );
 };
 
-const Dashboard = () => {
+const Dashboard = ({ chatMembers }) => {
   const [hasNotification, setHasNotification] = useState(true);
   const [state, setState] = useState([
     {
@@ -38,8 +47,9 @@ const Dashboard = () => {
       key: "selection",
     },
   ]);
-
+  const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
   const handleSelect = (ranges) => {
     console.log(ranges); // { selection: { startDate, endDate } }
@@ -49,6 +59,7 @@ const Dashboard = () => {
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    navigate("/explore");
   };
 
   const handleClose = () => {
@@ -56,6 +67,52 @@ const Dashboard = () => {
   };
 
   const open = Boolean(anchorEl);
+
+  const getChannelsDetailsByDateRange = () => {
+    // Function to filter channels based on the search query
+    const filteredChannels = chatMembers.filter((channel) =>
+      channel.channelName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const channelsDetails = filteredChannels
+      .map((channel) => {
+        // Directly use channel.members as we're not filtering by date range
+        const members = channel.members;
+
+        const linkDetails = members.reduce((acc, member) => {
+          const link = member.chatLink || "None";
+
+          if (!acc[link]) {
+            acc[link] = {
+              chatLink: link,
+              memberCount: 0,
+              leftMemberCount: 0,
+              uniqueMembers: new Set(),
+            };
+          }
+
+          if (member.leftAt) {
+            acc[link].leftMemberCount++;
+          }
+
+          if (!acc[link].uniqueMembers.has(member.memberId)) {
+            acc[link].memberCount++;
+            acc[link].uniqueMembers.add(member.memberId);
+          }
+
+          return acc;
+        }, {});
+
+        return {
+          channelName: channel.channelName,
+          linkDetails: Object.values(linkDetails),
+        };
+      })
+      .filter(Boolean); // Filter out null values to ensure we only return channels with members
+
+    return channelsDetails;
+  };
+
   return (
     <div className="dashboard-container p-0 sm:ml-60">
       {/* Dashboard Header */}
@@ -72,6 +129,8 @@ const Dashboard = () => {
             type="text"
             placeholder="Search..."
             className="border-none outline-none py-2 px-8 w-full placeholder-gray-500 text-gray-800"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           {/* Search Icon */}
           <span className="absolute right-3 text-2xl text-gray-500 search-icon">
@@ -106,205 +165,124 @@ const Dashboard = () => {
       </div>
 
       <div className="dashboard-container p-4">
-        {/* Channel List Title */}
-        <div className="dashboard-section mb-4">
-          <h2 className="text-2xl font-bold mb-2">Channel Listing</h2>
+          <h2 style={{marginBottom: "1.5rem", marginLeft: "0.5rem"}} className="text-2xl font-bold">Channel Listing</h2>
 
           {/* Eagle View 1 */}
           <div className="dashboard-view-section mb-4">
-            <div className="channel-heading">
-              <h3 className="text-xl font-semibold mb-2">Eagle View</h3>
-            </div>
-            <table className="table-list">
-              <thead>
-                <tr>
-                  <th>Chat Links</th>
-                  <th>Agency</th>
-                  <th>Total Member</th>
-                  <th>Member Join</th>
-                  <th>Member Left</th>
-                  <th className="filter-header">
-                  <div className="filterIcon">
-                    <IoFilter />
-                    Filter
-                  </div>
-                </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>https://t.me/+qCJbGLeN</td>
-                  <td>
-                    {/* Well-designed dropbox for Agency */}
-                    <div className="agency-dropdown-container">
-                      <select className="agency-dropdown" defaultValue="">
-                        <option value="" disabled>
-                          Select
-                        </option>
-                        <option value="Agency A">Agency A</option>
-                        <option value="Agency B">Agency B</option>
-                        <option value="Agency C">Agency C</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>1000</td>
-                  <td>+100</td>
-                  <td>-10</td>
-                  <td>
-                  <div>
-                      <CustomButton onClick={handleClick} />
-                      <Popover
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
-                        }}
-                        transformOrigin={{
-                          vertical: "top",
-                          horizontal: "left",
-                        }}
-                      >
-                        <DateRangePicker
-                          onChange={handleSelect}
-                          showSelectionPreview={true}
-                          moveRangeOnFirstSelection={false}
-                          months={1}
-                          ranges={state}
-                          direction="horizontal"
-                        />
-                      </Popover>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>https://t.me/+qCJbGLeN</td>
-                  <td>
-                    {/* Well-designed dropbox for Agency */}
-                    <div className="agency-dropdown-container">
-                      <select className="agency-dropdown" defaultValue="">
-                        <option value="" disabled>
-                          Select
-                        </option>
-                        <option value="Agency A">Agency A</option>
-                        <option value="Agency B">Agency B</option>
-                        <option value="Agency C">Agency C</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>1000</td>
-                  <td>+100</td>
-                  <td>-10</td>
-                  <td>
-                  <div>
-                      <CustomButton onClick={handleClick} />
-                      <Popover
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
-                        }}
-                        transformOrigin={{
-                          vertical: "top",
-                          horizontal: "left",
-                        }}
-                      >
-                        <DateRangePicker
-                          onChange={handleSelect}
-                          showSelectionPreview={true}
-                          moveRangeOnFirstSelection={false}
-                          months={1}
-                          ranges={state}
-                          direction="horizontal"
-                        />
-                      </Popover>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            {getChannelsDetailsByDateRange().map((channel, index) => (
+              <div className="my-8" key={index}>
+                <div key={index} className="channel-heading">
+                  <h3 className="text-xl font-semibold mb-2">
+                    {channel.channelName}
+                  </h3>
+                </div>
+                <table className="table-list">
+                  <thead>
+                    <tr>
+                      <th>Chat Links</th>
+                      <th>Agency</th>
+                      <th>Total Member</th>
+                      <th>Member Join</th>
+                      <th>Member Left</th>
+                      <th className="filter-header">
+                        <div className="filterIcon">
+                          <IoFilter />
+                          Filter
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                    <td>
+                        <ul>
+                          {channel.linkDetails.map((link, linkIndex) => (
+                            <li className="mt-7" key={linkIndex}>{link.chatLink}</li>
+                          ))}
+                        </ul>
+                      </td>
+                      <td>
+                        {/* Well-designed dropbox for Agency */}
+                        <ul className="agency-dropdown-container">
+                        {channel.linkDetails.map((link, linkIndex) => (
+                          <li className="mt-4" key={linkIndex}>
+                          <select className="agency-dropdown" defaultValue="">
+                            <option value="" disabled>
+                              Select
+                            </option>
+                            <option value="Agency A">Agency A</option>
+                            <option value="Agency B">Agency B</option>
+                            <option value="Agency C">Agency C</option>
+                          </select>
+                          </li>
+                          ))}
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          {channel.linkDetails.map((link, linkIndex) => (
+                            <li className="mt-7" key={linkIndex}>{link.memberCount + link.leftMemberCount}</li>
+                          ))}
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          {channel.linkDetails.map((link, linkIndex) => (
+                            <li className="mt-7" key={linkIndex}>+{link.memberCount}</li>
+                          ))}
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          {channel.linkDetails.map((link, linkIndex) => (
+                            <li className="mt-7" key={linkIndex}>-{link.leftMemberCount}</li>
+                          ))}
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                        {channel.linkDetails.map((link, linkIndex) => (
+                          <div style={{height: "2rem"}} className="mt-4" key={linkIndex}>
+                          <CustomButton onClick={handleClick} />
+                          <Popover
+                            open={open}
+                            anchorEl={anchorEl}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left",
+                            }}
+                            transformOrigin={{
+                              vertical: "top",
+                              horizontal: "left",
+                            }}
+                          >
+                            <DateRangePicker
+                              onChange={handleSelect}
+                              showSelectionPreview={true}
+                              moveRangeOnFirstSelection={false}
+                              months={1}
+                              ranges={state}
+                              direction="horizontal"
+                            />
+                          </Popover>
+                          </div>
+                           ))}
+                        </ul>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            ))}
           </div>
-
-          {/* Eagle View 2 */}
-          <div className="dashboard-view-section">
-            <div className="channel-heading">
-              <h3 className="text-xl font-semibold mb-2">Eagle View</h3>
-            </div>
-            <table className="table-list">
-              <thead>
-                <tr>
-                  <th>Chat Links</th>
-                  <th>Agency</th>
-                  <th>Total Member</th>
-                  <th>Member Join</th>
-                  <th>Member Left</th>
-                  <th className="filter-header">
-                    <div className="filterIcon">
-                      <IoFilter />
-                      Filter
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>https://t.me/+qCJbGLeN</td>
-                  <td>
-                    <div className="agency-dropdown-container">
-                      <select className="agency-dropdown" defaultValue="">
-                        <option value="" disabled>
-                          Select
-                        </option>
-                        <option value="Agency A">Agency A</option>
-                        <option value="Agency B">Agency B</option>
-                        <option value="Agency C">Agency C</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>1000</td>
-                  <td>+100</td>
-                  <td>-10</td>
-                  <td className="filter-column">
-                  <div>
-                      <CustomButton onClick={handleClick} />
-                      <Popover
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
-                        }}
-                        transformOrigin={{
-                          vertical: "top",
-                          horizontal: "left",
-                        }}
-                      >
-                        <DateRangePicker
-                          onChange={handleSelect}
-                          showSelectionPreview={true}
-                          moveRangeOnFirstSelection={false}
-                          months={1}
-                          ranges={state}
-                          direction="horizontal"
-                        />
-                      </Popover>
-                    </div>
-                  </td>
-                </tr>
-                {/* Add more rows as needed */}
-              </tbody>
-            </table>
-          </div>
-
-        </div>
       </div>
     </div>
   );
 };
 
+Dashboard.propTypes = {
+  chatMembers: PropTypes.any,
+};
 
 export default Dashboard;
