@@ -149,7 +149,7 @@ const Explore = () => {
 
       {/* Back Button */}
       <div className="back-button flex items-center text-2xl font-bold p-6">
-        <button onClick={() => navigate("/dashboard")}><FaAngleLeft /></button>
+        <button onClick={() => navigate("/")}><FaAngleLeft /></button>
         <span className="ml-1">Back</span>
       </div>
 
