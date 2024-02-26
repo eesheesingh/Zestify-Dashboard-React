@@ -112,10 +112,15 @@ const Explore = () => {
         )}
       </div>
 
-          <div className="profile-image-container">
-            {/* Circular Profile Image */}
-            <img src={profileImage} alt="Profile" className="profile-image" />
-          </div>
+      <div className="profile-image-container" style={{cursor:"pointer"}}>
+          {/* Circular Profile Image with click event */}
+          <img
+            src={profileImage}
+            alt="Profile"
+            className="profile-image"
+            onClick={() => navigate("/profile")} // Navigate to the profile page
+          />
+        </div>
         </div>
       </div>
 
@@ -165,8 +170,9 @@ const Explore = () => {
 
       {/* Back Button */}
       <div className="back-button flex items-center text-2xl font-bold p-6">
-        <button onClick={() => navigate("/")}><FaAngleLeft /></button>
+        <button style={{display:"flex", alignItems:"center"}} onClick={() => navigate("/")}><FaAngleLeft />
         <span className="ml-1">Back</span>
+        </button>
       </div>
 
       {/* Additional Divs below Eagle View */}
