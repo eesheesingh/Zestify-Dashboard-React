@@ -4,22 +4,23 @@ import Sidebar from './components/Sidebar/Sidebar';
 import Dashboard from './components/Dashboard/Dashboard';
 import Settings from './components/Settings/Settings';
 import Explore from './components/Explore/Explore'
-import Login from './components/LoginSignUp/Login';
-import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
+import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
+import ErrorPage from './components/ErrorPage/ErrorPage';
+import Login from "./components/LoginSignUp/Login"
+import { useState } from 'react';
 
 const App = () => {
+  const [chatMembers, setChatMembers] = useState(null);
  
   const router = createBrowserRouter(createRoutesFromElements(
     <>
-    <Route path= "/" element={<Sidebar />} errorElement={<div>Error page</div>}>
-      <Route path='' element={<Dashboard />} />
-      <Route path='explore' element={<Explore />} />
-      <Route path='setting' element={<Settings />} />
+    <Route path= "/" element= { chatMembers ? <Sidebar /> : <Navigate to="/login" /> } errorElement={<ErrorPage />}>
+      <Route path='' element= { chatMembers ? <Dashboard chatMembers={chatMembers} /> : <Navigate to="/login" />} />
+      <Route path='explore' element= { chatMembers ? <Explore chatMembers={chatMembers} /> : <Navigate to="/login" />} />
+      <Route path='setting' element= { chatMembers ? <Settings chatMembers={chatMembers} /> : <Navigate to="/login" />} />
     </Route>
-
-    
-      <Route path='login' element={<Login />} />
-      </>
+    <Route path='/login' element={<Login setChatMembers={setChatMembers} />} />
+    </>
   ))
 
   return (

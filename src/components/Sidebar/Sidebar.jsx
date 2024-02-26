@@ -5,11 +5,17 @@ import { RxDashboard } from 'react-icons/rx';
 import { IoSettingsOutline } from 'react-icons/io5';
 import './Sidebar.css';
 import Logo from '../../assets/Vector.svg';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef();
+  const navigate = useNavigate();
+
+  const Logout = () => {
+    sessionStorage.removeItem("chatId");
+    navigate("/login");
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -76,14 +82,6 @@ const Sidebar = () => {
               </Link>
             </li>
             <li>
-              <Link to="/explore"
-                className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
-              >
-                <IoSettingsOutline className='text-2xl' />
-                <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Explore</span>
-              </Link>
-            </li>
-            <li>
               <Link to="/setting"
                 className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
               >
@@ -96,7 +94,7 @@ const Sidebar = () => {
           {/* Sign out button */}
           <button
             className="sign-out-button flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
-            onClick={() => alert('Sign out clicked')}
+            onClick={Logout}
           >
             <BiLogOut className='text-2xl' />
             <span className="text-base font-bold ms-3">Sign Out</span>
