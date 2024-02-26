@@ -7,16 +7,17 @@ import { LuBell } from "react-icons/lu";
 import { IoFilter } from "react-icons/io5";
 import profileImage from "../../assets/an-avatar-of-a-brown-guy-looking-at-you-with-cute-smiles-with-transparent-background-hes-wearing-a-627855248.png";
 import { DateRangePicker } from "react-date-range";
-import "react-date-range/dist/styles.css"; // main style file
-import "react-date-range/dist/theme/default.css"; // theme css file
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 import { addDays } from "date-fns";
-import "react-date-range/dist/styles.css"; // main style file
-import "react-date-range/dist/theme/default.css"; // theme css file
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import NotificationPopup from "../NotificationPop/NotificationPopup";
 
 const CustomButton = ({ onClick }) => {
   return (
@@ -49,6 +50,7 @@ const Dashboard = ({ chatMembers }) => {
   ]);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const [notificationOpen, setNotificationOpen] = useState(false); // State to manage notification popup visibility
   const navigate = useNavigate();
 
   const handleSelect = (ranges) => {
@@ -59,11 +61,13 @@ const Dashboard = ({ chatMembers }) => {
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    setNotificationOpen(true); // Open notification popup
     navigate("/explore");
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    setNotificationOpen(false); // Close notification popup
   };
 
   const open = Boolean(anchorEl);
@@ -277,6 +281,18 @@ const Dashboard = ({ chatMembers }) => {
             ))}
           </div>
       </div>
+
+      {/* Notification Popup */}
+      {notificationOpen && (
+        <NotificationPopup
+          onClose={() => setNotificationOpen(false)}
+          notifications={[
+            { message: "Notification 1", date: "2024-02-26" },
+            { message: "Notification 2", date: "2024-02-27" },
+            { message: "Notification 3", date: "2024-02-28" },
+          ]}
+        />
+      )}
     </div>
   );
 };

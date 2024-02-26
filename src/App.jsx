@@ -14,10 +14,10 @@ const App = () => {
  
   const router = createBrowserRouter(createRoutesFromElements(
     <>
-    <Route path= "/" element= { chatMembers ? <Sidebar /> : <Navigate to="/login" /> } errorElement={<ErrorPage />}>
-      <Route path='' element= { chatMembers ? <Dashboard chatMembers={chatMembers} /> : <Navigate to="/login" />} />
-      <Route path='explore' element= { chatMembers ? <Explore chatMembers={chatMembers} /> : <Navigate to="/login" />} />
-      <Route path='setting' element= { chatMembers ? <Settings chatMembers={chatMembers} /> : <Navigate to="/login" />} />
+    <Route path= "/" element= { <Sidebar />  } errorElement={<ErrorPage />}>
+      <Route path='' element= { <Dashboard chatMembers={chatMembers} /> } />
+      <Route path='explore' element= { <Explore chatMembers={chatMembers} /> } />
+      <Route path='setting' element= { <Settings chatMembers={chatMembers} /> } />
     </Route>
     <Route path='/login' element={<Login setChatMembers={setChatMembers} />} />
     </>
@@ -33,3 +33,6 @@ const App = () => {
 }
 
 export default App
+
+
+{/* <Route path= "/" element= { chatMembers ? <Sidebar /> : <Navigate to="/login" /> } errorElement={<ErrorPage />}> */}
