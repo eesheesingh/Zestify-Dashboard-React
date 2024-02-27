@@ -9,6 +9,7 @@ import { IoFilter } from "react-icons/io5";
 import { DateRangePicker } from "react-date-range";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { GoEye } from "react-icons/go";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import profileImage from "../../assets/an-avatar-of-a-brown-guy-looking-at-you-with-cute-smiles-with-transparent-background-hes-wearing-a-627855248.png";
@@ -186,18 +187,13 @@ const Explore = () => {
           </div>
 
           <div className="AgencyOptions flex text-neutral-600">
-            <h3 className="mr-2 channel-heads ">Agency:</h3>
-            <p>
-              <select className="agency-dropdown" defaultValue="">
-                <option value="" disabled>
-                  Select
-                </option>
-                <option value="Agency A">Agency A</option>
-                <option value="Agency B">Agency B</option>
-                <option value="Agency C">Agency C</option>
-              </select>
-            </p>
-          </div>
+  <h3 className="mr-2 channel-heads">Overview Request:</h3>
+  <span className="eye-icon">
+    {/* Disable the icon if there are no notifications */}
+    <GoEye
+    />
+  </span>
+</div>
           <div className="filterOptions flex">
           <div className="filterIcon channel-heads mr-2">
             <IoFilter />

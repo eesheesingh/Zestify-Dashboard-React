@@ -1,5 +1,5 @@
 // Dashboard.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "./Dashboard.css";
 import { UilSearch } from "@iconscout/react-unicons";
@@ -16,6 +16,7 @@ import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { GoEye } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import NotificationPopup from "../NotificationPop/NotificationPopup";
 
@@ -41,6 +42,7 @@ const CustomButton = ({ onClick }) => {
 
 const Dashboard = ({ chatMembers }) => {
   const [hasNotification, setHasNotification] = useState(true);
+  const [notificationCount, setNotificationCount] = useState(5); // State for notification count
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -69,6 +71,11 @@ const Dashboard = ({ chatMembers }) => {
     setAnchorEl(null);
     setNotificationOpen(false); // Close notification popup
   };
+
+  useEffect(() => {
+    // Update notification count whenever hasNotification changes
+    setNotificationCount(hasNotification ? 5 : 0);
+  }, [hasNotification]);
 
   const open = Boolean(anchorEl);
 
@@ -181,9 +188,7 @@ const Dashboard = ({ chatMembers }) => {
           {getChannelsDetailsByDateRange().map((channel, index) => (
             <div className="my-8" key={index}>
               <div key={index} className="channel-heading">
-                <h3 className="text-xl font-semibold">
-                  {channel.channelName}
-                </h3>
+                <h3 className="text-xl font-semibold">{channel.channelName}</h3>
               </div>
               <table className="table-list">
                 <thead>
@@ -217,7 +222,35 @@ const Dashboard = ({ chatMembers }) => {
                       <ul className="agency-dropdown-container">
                         {channel.linkDetails.map((link, linkIndex) => (
                           <li className="mt-4" key={linkIndex}>
-                            <input style={{padding: "0.6rem 0 0.3rem 0"}} className="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="enter" />
+                            <div className="agency-inputs">
+                              {/* Show the notification bubble for random three rows */}
+                              {notificationCount > 0 && Math.random() < 0.3 && (
+                                <div className="notification-bubble">
+                                  {notificationCount}
+                                </div>
+                              )}
+
+                              {/* Input for agency */}
+                              <input
+                                className="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                type="text"
+                                placeholder="Enter ID"
+                              />
+
+                              {/* GoEye icon */}
+                              <span className="eye-icon">
+                                {/* Disable the icon if there are no notifications */}
+                                <GoEye
+                                  style={{
+                                    cursor:
+                                      notificationCount > 0
+                                        ? "pointer"
+                                        : "not-allowed",
+                                    opacity: notificationCount > 0 ? 1 : 0.5,
+                                  }}
+                                />
+                              </span>
+                            </div>
                           </li>
                         ))}
                       </ul>
@@ -250,42 +283,42 @@ const Dashboard = ({ chatMembers }) => {
                       </ul>
                     </td>
                     <td>
-                        {channel.linkDetails.map((link, linkIndex) => (
-                      <ul key={linkIndex}>
-                          <div style={{height: "2rem"}} className="mt-4">
-                          <CustomButton onClick={handleClick} />
-                          <Popover
-                            open={open}
-                            anchorEl={anchorEl}
-                            onClose={handleClose}
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "left",
-                            }}
-                            transformOrigin={{
-                              vertical: "top",
-                              horizontal: "left",
-                            }}
-                          >
-                            <DateRangePicker
-                              onChange={handleSelect}
-                              showSelectionPreview={true}
-                              moveRangeOnFirstSelection={false}
-                              months={1}
-                              ranges={state}
-                              direction="horizontal"
-                            />
-                          </Popover>
+                      {channel.linkDetails.map((link, linkIndex) => (
+                        <ul key={linkIndex}>
+                          <div style={{ height: "2rem" }} className="mt-4">
+                            <CustomButton onClick={handleClick} />
+                            <Popover
+                              open={open}
+                              anchorEl={anchorEl}
+                              onClose={handleClose}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                            >
+                              <DateRangePicker
+                                onChange={handleSelect}
+                                showSelectionPreview={true}
+                                moveRangeOnFirstSelection={false}
+                                months={1}
+                                ranges={state}
+                                direction="horizontal"
+                              />
+                            </Popover>
                           </div>
                         </ul>
-                           ))}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            ))}
-          </div>
+                      ))}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Notification Popup */}
