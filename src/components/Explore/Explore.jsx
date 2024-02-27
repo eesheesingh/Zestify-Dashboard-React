@@ -11,9 +11,9 @@ import { BsCalendarDateFill } from "react-icons/bs";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
-
 import profileImage from "../../assets/an-avatar-of-a-brown-guy-looking-at-you-with-cute-smiles-with-transparent-background-hes-wearing-a-627855248.png";
 import { useNavigate } from "react-router-dom";
+import NotificationPopup from "../NotificationPop/NotificationPopup";
 
 const CustomButton = ({ onClick }) => {
   return (
@@ -38,6 +38,17 @@ const CustomButton = ({ onClick }) => {
 const Explore = () => {
   const navigate = useNavigate();
   const [hasNotification, setHasNotification] = useState(true);
+  const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+
+
+  const handleNotificationClick = () => {
+    setHasNotification(false);
+    setShowNotificationPopup(true);
+  };
+
+  const closeNotificationPopup = () => {
+    setShowNotificationPopup(false);
+  };
 
   const [state, setState] = useState([
     {
@@ -46,6 +57,8 @@ const Explore = () => {
       key: "selection",
     },
   ]);
+
+  
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -79,27 +92,35 @@ const Explore = () => {
 
         {/* Right: Bell Icon and Circular Profile Image */}
         <div className="col-span-1 flex items-center justify-end space-x-4">
-          <div className="relative text-gray-800">
-            {/* Bell Icon with notification dot */}
-            <button
-              className="focus:outline-none"
-              onClick={() => setHasNotification(!hasNotification)}
-            >
-              <div
-                className={`text-2xl bell-icon ${
-                  hasNotification ? "has-notification" : ""
-                }`}
-              >
-                <LuBell className="bell" />
-              </div>
-              {hasNotification && <div className="notification-dot"></div>}
-            </button>
+        <div className="col-span-1 relative text-gray-800">
+        {/* Bell Icon with notification dot */}
+        <button
+          className="focus:outline-none"
+          onClick={handleNotificationClick}
+        >
+          <div
+            className={`text-2xl bell-icon ${
+              hasNotification ? "has-notification" : ""
+            }`}
+          >
+            <LuBell className="bell" />
           </div>
+          {hasNotification && <div className="notification-dot"></div>}
+        </button>
+        {showNotificationPopup && (
+          <NotificationPopup onClose={closeNotificationPopup} />
+        )}
+      </div>
 
-          <div className="profile-image-container">
-            {/* Circular Profile Image */}
-            <img src={profileImage} alt="Profile" className="profile-image" />
-          </div>
+      <div className="profile-image-container" style={{cursor:"pointer"}}>
+          {/* Circular Profile Image with click event */}
+          <img
+            src={profileImage}
+            alt="Profile"
+            className="profile-image"
+            onClick={() => navigate("/profile")} // Navigate to the profile page
+          />
+        </div>
         </div>
       </div>
 
@@ -149,8 +170,9 @@ const Explore = () => {
 
       {/* Back Button */}
       <div className="back-button flex items-center text-2xl font-bold p-6">
-        <button onClick={() => navigate("/")}><FaAngleLeft /></button>
+        <button style={{display:"flex", alignItems:"center"}} onClick={() => navigate("/")}><FaAngleLeft />
         <span className="ml-1">Back</span>
+        </button>
       </div>
 
       {/* Additional Divs below Eagle View */}

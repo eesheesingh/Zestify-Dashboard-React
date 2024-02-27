@@ -5,12 +5,13 @@ import { RxDashboard } from 'react-icons/rx';
 import { IoSettingsOutline } from 'react-icons/io5';
 import './Sidebar.css';
 import Logo from '../../assets/Vector.svg';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const Logout = () => {
     sessionStorage.removeItem("chatId");
@@ -32,6 +33,12 @@ const Sidebar = () => {
   };
 
   document.addEventListener('mousedown', handleClickOutside);
+
+  // Function to check if the link is active
+  const isLinkActive = (path) => {
+    return location.pathname === path;
+  };
+
 
   return (
     <>
@@ -73,14 +80,14 @@ const Sidebar = () => {
             <span className="self-center text-2xl font-semibold whitespace-nowrap">Logo</span>
           </a>
           <ul className="sidebar-menu space-y-4 font-medium">
-            <li>
-              <Link to="/"
-                className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
-              >
-                <RxDashboard className='text-2xl' />
-                <span className="text-base font-bold ms-3">Dashboard</span>
-              </Link>
-            </li>
+        <li>
+          <Link to="/"
+            className={`menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group ${isLinkActive('/') ? 'active' : ''}`}
+          >
+            <RxDashboard className='text-2xl' />
+            <span className="text-base font-bold ms-3">Dashboard</span>
+          </Link>
+        </li>
             <li>
               <Link to="/explore"
                 className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
@@ -89,15 +96,16 @@ const Sidebar = () => {
                 <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Explore</span>
               </Link>
             </li>
-            <li>
-              <Link to="/setting"
-                className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
-              >
-                <IoSettingsOutline className='text-2xl' />
-                <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Settings</span>
-              </Link>
-            </li>
-          </ul>
+        <li>
+          <Link to="/setting"
+            className={`menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group ${isLinkActive('/setting') ? 'active' : ''}`}
+          >
+            <IoSettingsOutline className='text-2xl' />
+            <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Settings</span>
+          </Link>
+        </li>
+      </ul>
+
 
           {/* Sign out button */}
           <button

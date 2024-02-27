@@ -1,0 +1,47 @@
+/* NotificationPopup.css */
+
+.notification-popup {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    width: 300px;
+  }
+  
+  .notifications-container {
+    margin-top: 10px;
+  }
+  
+  .notification {
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  .notification p {
+    margin: 0;
+    color: #333;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  .close-icon {
+    cursor: pointer;
+    color: #999;
+    font-size: 18px;
+  }
+  
+  .close-icon:hover {
+    color: #e53e3e;
+  }
+  

@@ -50,3 +50,8 @@
     -o-transform: translateY(-5px);
 }
   
+
+.menu-item.active {
+  background-color: #e9ecef;
+  transform: translateY(-5px);
+}
