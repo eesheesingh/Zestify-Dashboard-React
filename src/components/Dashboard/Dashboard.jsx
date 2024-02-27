@@ -9,68 +9,57 @@ import profileImage from "../../assets/an-avatar-of-a-brown-guy-looking-at-you-w
 import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
-import { addDays } from "date-fns";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import NotificationPopup from "../NotificationPop/NotificationPopup";
-
-const CustomButton = ({ onClick }) => {
-  return (
-    <Button
-      onClick={onClick}
-      style={{
-        backgroundColor: "transparent",
-        color: "#4a5568",
-        border: "1px solid #4a5568",
-        borderRadius: "8px",
-      }}
-    >
-      <BsCalendarDateFill />
-      <span style={{ marginLeft: "0.5rem", textTransform: "none" }}>
-        Date Range
-      </span>
-      <MdKeyboardArrowDown />
-    </Button>
-  );
-};
 
 const Dashboard = ({ chatMembers }) => {
   const [hasNotification, setHasNotification] = useState(true);
-  const [state, setState] = useState([
-    {
-      startDate: new Date(),
-      endDate: addDays(new Date(), 7),
-      key: "selection",
-    },
-  ]);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationOpen, setNotificationOpen] = useState(false); // State to manage notification popup visibility
-  const navigate = useNavigate();
+  const [linkDateRanges, setLinkDateRanges] = useState({});
 
-  const handleSelect = (ranges) => {
-    console.log(ranges); // { selection: { startDate, endDate } }
-    setState([ranges.selection]);
-    setAnchorEl(null); // Close the popover after selecting the date range
+  const handleSelect = (linkId, ranges) => {
+    setLinkDateRanges((prevState) => ({
+      ...prevState,
+      [linkId]: ranges.selection,
+    }));
   };
 
-  const handleClick = (event) => {
+  const handleClick = (event, linkId) => {
     setAnchorEl(event.currentTarget);
-    setNotificationOpen(true); // Open notification popup
-    navigate("/explore");
+    // Update the linkId in the state
+    setLinkDateRanges((prevState) => ({
+      ...prevState,
+      [linkId]: prevState[linkId]
+        ? null
+        : { startDate: new Date(), endDate: new Date() },
+    }));
   };
+
+  const open = Boolean(anchorEl);
 
   const handleClose = () => {
     setAnchorEl(null);
     setNotificationOpen(false); // Close notification popup
   };
 
-  const open = Boolean(anchorEl);
+  const filterMembersByDateRange = (members, dateRange) => {
+    if (!dateRange || !members) return [];
+
+    const { startDate, endDate } = dateRange;
+    return members.filter((member) => {
+      const joinedAt = new Date(member.joinedAt);
+      const leftAt = member.leftAt ? new Date(member.leftAt) : null;
+      return joinedAt <= endDate && (!leftAt || leftAt >= startDate);
+    });
+  };
 
   const getChannelsDetailsByDateRange = () => {
     // Function to filter channels based on the search query
@@ -181,9 +170,7 @@ const Dashboard = ({ chatMembers }) => {
           {getChannelsDetailsByDateRange().map((channel, index) => (
             <div className="my-8" key={index}>
               <div key={index} className="channel-heading">
-                <h3 className="text-xl font-semibold">
-                  {channel.channelName}
-                </h3>
+                <h3 className="text-xl font-semibold">{channel.channelName}</h3>
               </div>
               <table className="table-list">
                 <thead>
@@ -217,7 +204,12 @@ const Dashboard = ({ chatMembers }) => {
                       <ul className="agency-dropdown-container">
                         {channel.linkDetails.map((link, linkIndex) => (
                           <li className="mt-4" key={linkIndex}>
-                            <input style={{padding: "0.6rem 0 0.3rem 0"}} className="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="enter" />
+                            <input
+                              style={{ padding: "0.6rem 0 0.3rem 0" }}
+                              className="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                              type="text"
+                              placeholder="enter"
+                            />
                           </li>
                         ))}
                       </ul>
@@ -250,42 +242,73 @@ const Dashboard = ({ chatMembers }) => {
                       </ul>
                     </td>
                     <td>
-                        {channel.linkDetails.map((link, linkIndex) => (
-                      <ul key={linkIndex}>
-                          <div style={{height: "2rem"}} className="mt-4">
-                          <CustomButton onClick={handleClick} />
-                          <Popover
-                            open={open}
-                            anchorEl={anchorEl}
-                            onClose={handleClose}
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "left",
-                            }}
-                            transformOrigin={{
-                              vertical: "top",
-                              horizontal: "left",
-                            }}
-                          >
-                            <DateRangePicker
-                              onChange={handleSelect}
-                              showSelectionPreview={true}
-                              moveRangeOnFirstSelection={false}
-                              months={1}
-                              ranges={state}
-                              direction="horizontal"
-                            />
-                          </Popover>
+                      {channel.linkDetails.map((link, linkIndex) => (
+                        <ul key={linkIndex}>
+                          <div style={{ height: "2rem" }} className="mt-4">
+                            <Button
+                              onClick={(event) =>
+                                handleClick(event, link.chatLink)
+                              }
+                              style={{
+                                backgroundColor: "transparent",
+                                color: "#4a5568",
+                                border: "1px solid #4a5568",
+                                borderRadius: "8px",
+                              }}
+                            >
+                              <BsCalendarDateFill />
+                              <span
+                                style={{
+                                  marginLeft: "0.5rem",
+                                  textTransform: "none",
+                                }}
+                              >
+                                Date Range
+                              </span>
+                              <MdKeyboardArrowDown />
+                            </Button>
+                            <Popover
+                              open={
+                                open && Boolean(linkDateRanges[link.chatLink])
+                              }
+                              anchorEl={anchorEl}
+                              onClose={handleClose}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                            >
+                              <DateRangePicker
+                                onChange={(range) =>
+                                  handleSelect(link.chatLink, range)
+                                }
+                                showSelectionPreview={true}
+                                moveRangeOnFirstSelection={false}
+                                months={1}
+                                ranges={[
+                                  linkDateRanges[link.chatLink] || {
+                                    startDate: new Date(),
+                                    endDate: new Date(),
+                                    key: "selection",
+                                  },
+                                ]}
+                                direction="horizontal"
+                              />
+                            </Popover>
                           </div>
                         </ul>
-                           ))}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            ))}
-          </div>
+                      ))}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Notification Popup */}

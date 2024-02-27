@@ -15,31 +15,10 @@ import profileImage from "../../assets/an-avatar-of-a-brown-guy-looking-at-you-w
 import { useNavigate } from "react-router-dom";
 import NotificationPopup from "../NotificationPop/NotificationPopup";
 
-const CustomButton = ({ onClick }) => {
-  return (
-    <Button
-      onClick={onClick}
-      style={{
-        backgroundColor: "transparent",
-        color: "#4a5568",
-        border: "1px solid #4a5568",
-        borderRadius: "8px",
-      }}
-    >
-      <BsCalendarDateFill />
-      <span style={{ marginLeft: "0.5rem", textTransform: "none" }}>
-        Date Range
-      </span>
-      <MdKeyboardArrowDown />
-    </Button>
-  );
-};
-
 const Explore = () => {
   const navigate = useNavigate();
   const [hasNotification, setHasNotification] = useState(true);
   const [showNotificationPopup, setShowNotificationPopup] = useState(false);
-
 
   const handleNotificationClick = () => {
     setHasNotification(false);
@@ -57,8 +36,6 @@ const Explore = () => {
       key: "selection",
     },
   ]);
-
-  
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -92,35 +69,38 @@ const Explore = () => {
 
         {/* Right: Bell Icon and Circular Profile Image */}
         <div className="col-span-1 flex items-center justify-end space-x-4">
-        <div className="col-span-1 relative text-gray-800">
-        {/* Bell Icon with notification dot */}
-        <button
-          className="focus:outline-none"
-          onClick={handleNotificationClick}
-        >
-          <div
-            className={`text-2xl bell-icon ${
-              hasNotification ? "has-notification" : ""
-            }`}
-          >
-            <LuBell className="bell" />
+          <div className="col-span-1 relative text-gray-800">
+            {/* Bell Icon with notification dot */}
+            <button
+              className="focus:outline-none"
+              onClick={handleNotificationClick}
+            >
+              <div
+                className={`text-2xl bell-icon ${
+                  hasNotification ? "has-notification" : ""
+                }`}
+              >
+                <LuBell className="bell" />
+              </div>
+              {hasNotification && <div className="notification-dot"></div>}
+            </button>
+            {showNotificationPopup && (
+              <NotificationPopup onClose={closeNotificationPopup} />
+            )}
           </div>
-          {hasNotification && <div className="notification-dot"></div>}
-        </button>
-        {showNotificationPopup && (
-          <NotificationPopup onClose={closeNotificationPopup} />
-        )}
-      </div>
 
-      <div className="profile-image-container" style={{cursor:"pointer"}}>
-          {/* Circular Profile Image with click event */}
-          <img
-            src={profileImage}
-            alt="Profile"
-            className="profile-image"
-            onClick={() => navigate("/profile")} // Navigate to the profile page
-          />
-        </div>
+          <div
+            className="profile-image-container"
+            style={{ cursor: "pointer" }}
+          >
+            {/* Circular Profile Image with click event */}
+            <img
+              src={profileImage}
+              alt="Profile"
+              className="profile-image"
+              onClick={() => navigate("/profile")} // Navigate to the profile page
+            />
+          </div>
         </div>
       </div>
 
@@ -170,8 +150,12 @@ const Explore = () => {
 
       {/* Back Button */}
       <div className="back-button flex items-center text-2xl font-bold p-6">
-        <button style={{display:"flex", alignItems:"center"}} onClick={() => navigate("/")}><FaAngleLeft />
-        <span className="ml-1">Back</span>
+        <button
+          style={{ display: "flex", alignItems: "center" }}
+          onClick={() => navigate("/")}
+        >
+          <FaAngleLeft />
+          <span className="ml-1">Back</span>
         </button>
       </div>
 
@@ -182,102 +166,103 @@ const Explore = () => {
         </div>
         <div className="channelOptions flex place-content-between pt-5 px-6">
           <div className="chatLinks flex">
-            <h3 className="mr-2 channel-heads">Chat Links:</h3> <p>https://t.me/+qCJbGLeN</p>
-          </div>
-
-          <div className="AgencyOptions flex text-neutral-600">
-            <h3 className="mr-2 channel-heads ">Agency:</h3>
-            <p>
-              <select className="agency-dropdown" defaultValue="">
-                <option value="" disabled>
-                  Select
-                </option>
-                <option value="Agency A">Agency A</option>
-                <option value="Agency B">Agency B</option>
-                <option value="Agency C">Agency C</option>
-              </select>
-            </p>
+            <h3 className="mr-2 channel-heads">Chat Links:</h3>{" "}
+            <p>https://t.me/+qCJbGLeN</p>
           </div>
           <div className="filterOptions flex">
-          <div className="filterIcon channel-heads mr-2">
-            <IoFilter />
-            Filter:
-          </div>
-          <div className="date-range px-1">
-                      <CustomButton onClick={handleClick} />
-                      <Popover
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
-                        }}
-                        transformOrigin={{
-                          vertical: "top",
-                          horizontal: "left",
-                        }}
-                      >
-                        <DateRangePicker
-                          onChange={handleSelect}
-                          showSelectionPreview={true}
-                          moveRangeOnFirstSelection={false}
-                          months={1}
-                          ranges={state}
-                          direction="horizontal"
-                        />
-                      </Popover>
-                    </div>
+            <div className="filterIcon channel-heads mr-2">
+              <IoFilter />
+              Filter:
+            </div>
+            <div className="date-range px-1">
+              <Button
+                onClick={handleClick}
+                style={{
+                  backgroundColor: "transparent",
+                  color: "#4a5568",
+                  border: "1px solid #4a5568",
+                  borderRadius: "8px",
+                }}
+              >
+                <BsCalendarDateFill />
+                <span style={{ marginLeft: "0.5rem", textTransform: "none" }}>
+                  Date Range
+                </span>
+                <MdKeyboardArrowDown />
+              </Button>
+              <Popover
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                <DateRangePicker
+                  onChange={handleSelect}
+                  showSelectionPreview={true}
+                  moveRangeOnFirstSelection={false}
+                  months={1}
+                  ranges={state}
+                  direction="horizontal"
+                />
+              </Popover>
+            </div>
           </div>
         </div>
         <div className="channelResult px-5 pb-3">
-  <table className="channel-table">
-    <thead>
-      <tr className="exploreChannels">
-        <th>Date</th>
-        <th>Total Members</th>
-        <th>Members Join</th>
-        <th>Members Left</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr className="channel-numbers">
-          <td>12/02/2024</td>
-          <td>1000</td>
-          <td>+100</td>
-          <td>-10</td>
-        </tr>
+          <table className="channel-table">
+            <thead>
+              <tr className="exploreChannels">
+                <th>Date</th>
+                <th>Total Members</th>
+                <th>Members Join</th>
+                <th>Members Left</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="channel-numbers">
+                <td>12/02/2024</td>
+                <td>1000</td>
+                <td>+100</td>
+                <td>-10</td>
+              </tr>
 
-        <tr className="channel-numbers">
-          <td>13/02/2024</td>
-          <td>1000</td>
-          <td>+100</td>
-          <td>-10</td>
-        </tr>
+              <tr className="channel-numbers">
+                <td>13/02/2024</td>
+                <td>1000</td>
+                <td>+100</td>
+                <td>-10</td>
+              </tr>
 
-        <tr className="channel-numbers">
-          <td>14/02/2024</td>
-          <td>1000</td>
-          <td>+100</td>
-          <td>-10</td>
-        </tr>
+              <tr className="channel-numbers">
+                <td>14/02/2024</td>
+                <td>1000</td>
+                <td>+100</td>
+                <td>-10</td>
+              </tr>
 
-        <tr className="channel-numbers">
-          <td>15/02/2024</td>
-          <td>1000</td>
-          <td>+100</td>
-          <td>-10</td>
-        </tr>
+              <tr className="channel-numbers">
+                <td>15/02/2024</td>
+                <td>1000</td>
+                <td>+100</td>
+                <td>-10</td>
+              </tr>
 
-        <tr className="channel-numbers">
-          <td>16/02/2024</td>
-          <td>1000</td>
-          <td>+100</td>
-          <td>-10</td>
-        </tr>
-    </tbody>
-  </table>
-</div>
+              <tr className="channel-numbers">
+                <td>16/02/2024</td>
+                <td>1000</td>
+                <td>+100</td>
+                <td>-10</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
