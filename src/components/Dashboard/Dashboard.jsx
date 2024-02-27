@@ -165,84 +165,90 @@ const Dashboard = ({ chatMembers }) => {
       </div>
 
       <div className="dashboard-container p-4">
-          <h2 style={{marginBottom: "1.5rem", marginLeft: "0.5rem"}} className="text-2xl font-bold">Channel Listing</h2>
+        <h2
+          style={{ marginBottom: "1.5rem", marginLeft: "0.5rem" }}
+          className="text-2xl font-bold"
+        >
+          Channel Listing
+        </h2>
 
-          {/* Eagle View 1 */}
-          <div className="dashboard-view-section mb-4">
-            {getChannelsDetailsByDateRange().map((channel, index) => (
-              <div className="my-8" key={index}>
-                <div key={index} className="channel-heading">
-                  <h3 className="text-xl font-semibold mb-2">
-                    {channel.channelName}
-                  </h3>
-                </div>
-                <table className="table-list">
-                  <thead>
-                    <tr>
-                      <th>Chat Links</th>
-                      <th>Agency</th>
-                      <th>Total Member</th>
-                      <th>Member Join</th>
-                      <th>Member Left</th>
-                      <th className="filter-header">
-                        <div className="filterIcon">
-                          <IoFilter />
-                          Filter
-                        </div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
+        {/* Eagle View 1 */}
+        <div className="dashboard-view-section mb-4">
+          {getChannelsDetailsByDateRange().map((channel, index) => (
+            <div className="my-8" key={index}>
+              <div key={index} className="channel-heading">
+                <h3 className="text-xl font-semibold">
+                  {channel.channelName}
+                </h3>
+              </div>
+              <table className="table-list">
+                <thead>
+                  <tr>
+                    <th>Chat Links</th>
+                    <th>Request ID</th>
+                    <th>Total Member</th>
+                    <th>Member Join</th>
+                    <th>Member Left</th>
+                    <th className="filter-header">
+                      <div className="filterIcon">
+                        <IoFilter />
+                        Filter
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
                     <td>
-                        <ul>
-                          {channel.linkDetails.map((link, linkIndex) => (
-                            <li className="mt-7" key={linkIndex}>{link.chatLink}</li>
-                          ))}
-                        </ul>
-                      </td>
-                      <td>
-                        {/* Well-designed dropbox for Agency */}
-                        <ul className="agency-dropdown-container">
+                      <ul>
+                        {channel.linkDetails.map((link, linkIndex) => (
+                          <li className="mt-7" key={linkIndex}>
+                            {link.chatLink}
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td>
+                      {/* Well-designed dropbox for Agency */}
+                      <ul className="agency-dropdown-container">
                         {channel.linkDetails.map((link, linkIndex) => (
                           <li className="mt-4" key={linkIndex}>
-                          <select className="agency-dropdown" defaultValue="">
-                            <option value="" disabled>
-                              Select
-                            </option>
-                            <option value="Agency A">Agency A</option>
-                            <option value="Agency B">Agency B</option>
-                            <option value="Agency C">Agency C</option>
-                          </select>
+                            <input style={{padding: "0.6rem 0 0.3rem 0"}} className="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="enter" />
                           </li>
-                          ))}
-                        </ul>
-                      </td>
-                      <td>
-                        <ul>
-                          {channel.linkDetails.map((link, linkIndex) => (
-                            <li className="mt-7" key={linkIndex}>{link.memberCount + link.leftMemberCount}</li>
-                          ))}
-                        </ul>
-                      </td>
-                      <td>
-                        <ul>
-                          {channel.linkDetails.map((link, linkIndex) => (
-                            <li className="mt-7" key={linkIndex}>+{link.memberCount}</li>
-                          ))}
-                        </ul>
-                      </td>
-                      <td>
-                        <ul>
-                          {channel.linkDetails.map((link, linkIndex) => (
-                            <li className="mt-7" key={linkIndex}>-{link.leftMemberCount}</li>
-                          ))}
-                        </ul>
-                      </td>
-                      <td>
-                        <ul>
+                        ))}
+                      </ul>
+                    </td>
+                    <td>
+                      <ul>
                         {channel.linkDetails.map((link, linkIndex) => (
-                          <div style={{height: "2rem"}} className="mt-4" key={linkIndex}>
+                          <li className="mt-7" key={linkIndex}>
+                            {link.memberCount + link.leftMemberCount}
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td>
+                      <ul>
+                        {channel.linkDetails.map((link, linkIndex) => (
+                          <li className="mt-7" key={linkIndex}>
+                            +{link.memberCount}
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td>
+                      <ul>
+                        {channel.linkDetails.map((link, linkIndex) => (
+                          <li className="mt-7" key={linkIndex}>
+                            -{link.leftMemberCount}
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td>
+                        {channel.linkDetails.map((link, linkIndex) => (
+                      <ul key={linkIndex}>
+                          <div style={{height: "2rem"}} className="mt-4">
                           <CustomButton onClick={handleClick} />
                           <Popover
                             open={open}
@@ -267,8 +273,8 @@ const Dashboard = ({ chatMembers }) => {
                             />
                           </Popover>
                           </div>
-                           ))}
                         </ul>
+                           ))}
                       </td>
                     </tr>
                   </tbody>
