@@ -78,14 +78,14 @@ const Login = ({setChatMembers}) => {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2 className='loginHeading'>Login</h2>
-        <p className='loginPara'>Enter your Chat ID to log in:</p>
+        <h2 className='loginHeading font-bold'>Login</h2>
+        <p className='loginPara'>Full access to in any of our products Full access to in any of </p>
         <div className="loginForm">
           <form onSubmit={handleSubmit}>
             <div className="input-container">
               <input
                 type="text"
-                placeholder="Chat ID"
+                placeholder="Enter your Number or  ID Number"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 required

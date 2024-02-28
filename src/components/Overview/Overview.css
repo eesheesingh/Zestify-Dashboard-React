@@ -1,0 +1,99 @@
+/* Add this to your Dashboard.css file */
+
+/* Overview Table Styles */
+.overview-table-container {
+    margin: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .overview-heading {
+    padding: 1rem;
+    color: #000;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  
+  .overview-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  
+  .overview-table th,
+  .overview-table td {
+    padding: 1rem;
+  }
+
+  .centered-table{
+    text-align: center;
+  }
+  
+  .left-headings{
+    text-align: left;
+  }
+
+  .overview-table th {
+    color: #000;
+  }
+  
+  .overview-table td {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  /* Apply alternate grey color to table rows */
+  .overview-numbers:nth-child(even) {
+    background-color: #f8f8f8;
+  }
+  
+  /* Blue color for Members Joined column */
+  .overview-table td:nth-child(3) {
+    color: #3498db;
+    font-weight: bold;
+    text-align: center
+  }
+  
+  /* Green color for Members Left column */
+  .overview-table td:nth-child(4) {
+    color: #F10000;
+    font-weight: bold;
+    text-align: center
+  }
+
+  .overview-table td:nth-child(5) {
+    text-align: center
+  }
+
+  /* Date Range Picker Button Styles */
+  .date-range-picker-button {
+    background-color: transparent;
+    color: #4a5568;
+    border: 1px solid #4a5568;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .date-range-picker-button:hover {
+    background-color: #4a5568;
+    color: #ffffff;
+  }
+  
+  .date-range-picker-button svg {
+    margin-right: 0.5rem;
+  }
+  
+  .date-range-picker-button span {
+    margin-left: 0.5rem;
+  }
+  
+  .date-range-picker-button .arrow-icon {
+    margin-left: auto;
+  }
+  

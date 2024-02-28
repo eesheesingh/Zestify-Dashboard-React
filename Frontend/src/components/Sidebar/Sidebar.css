@@ -23,12 +23,17 @@
   }
   
   .menu-item {
-    color: #495057;
+    color: #8E92BC;
     font-size: 1.2rem;
     transition: background-color 0.3s ease, transform 0.3s ease;
-  }
+    -webkit-transition: background-color 0.3s ease, transform 0.3s ease;
+    -moz-transition: background-color 0.3s ease, transform 0.3s ease;
+    -ms-transition: background-color 0.3s ease, transform 0.3s ease;
+    -o-transition: background-color 0.3s ease, transform 0.3s ease;
+}
   
   .menu-item:hover {
+    color: #000;
     background-color: #e9ecef;
     transform: translateY(-5px);
 }
@@ -54,4 +59,5 @@
 .menu-item.active {
   background-color: #e9ecef;
   transform: translateY(-5px);
+  color: #000;
 }
