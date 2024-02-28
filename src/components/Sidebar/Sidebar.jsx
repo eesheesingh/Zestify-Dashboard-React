@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { BiLogOut } from 'react-icons/bi';
 import { RxDashboard } from 'react-icons/rx';
 import { IoSettingsOutline } from 'react-icons/io5';
+import { PiBookOpenText } from "react-icons/pi";
 import './Sidebar.css';
 import Logo from '../../assets/Vector.svg';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
@@ -82,15 +83,23 @@ const Sidebar = () => {
           <ul className="sidebar-menu space-y-4 font-medium">
         <li>
           <Link to="/"
-            className={`menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group ${isLinkActive('/') ? 'active' : ''}`}
+            className={`menu-item flex items-center px-4 py-3 rounded-lg hover:bg-gray-200 group ${isLinkActive('/') ? 'active' : ''}`}
           >
             <RxDashboard className='text-2xl' />
             <span className="text-base font-bold ms-3">Dashboard</span>
           </Link>
         </li>
+        <li>
+          <Link to="/overview"
+            className={`menu-item flex items-center px-4 py-3 rounded-lg hover:bg-gray-200 group ${isLinkActive('/overview') ? 'active' : ''}`}
+          >
+            <PiBookOpenText className='text-2xl' />
+            <span className="text-base font-bold ms-3 whitespace-nowrap">Overview</span>
+          </Link>
+        </li>
             <li>
               <Link to="/explore"
-                className="menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group"
+                className="menu-item flex items-center px-4 py-3 rounded-lg hover:bg-gray-200 group"
               >
                 <IoSettingsOutline className='text-2xl' />
                 <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Explore</span>
@@ -98,7 +107,7 @@ const Sidebar = () => {
             </li>
         <li>
           <Link to="/setting"
-            className={`menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group ${isLinkActive('/setting') ? 'active' : ''}`}
+            className={`menu-item flex items-center px-4 py-3 rounded-lg hover:bg-gray-200 group ${isLinkActive('/setting') ? 'active' : ''}`}
           >
             <IoSettingsOutline className='text-2xl' />
             <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Settings</span>
