@@ -21,23 +21,23 @@ import { useNavigate } from "react-router-dom";
 
 const Dashboard = ({ chatMembers }) => {
   const [hasNotification, setHasNotification] = useState(true);
-  const [filteredData1, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [linkDateRanges, setLinkDateRanges] = useState({});
   const navigate = useNavigate();
 
-  const handleSelect = (linkId, ranges) => {
-    setLinkDateRanges((prevState) => ({
-      ...prevState,
-      [linkId]: ranges,
-    }));
-    const filteredData = filterMembersByDateRange(chatMembers, ranges);
-    setFilteredData(filteredData);
-    navigate('/explore', { state: { filteredData: filteredData1 } });
+  const handleSelect = (linkId, ranges, channelName) => {
+    let finalLinkId = linkId;
+  if (linkId === "None") {
+    finalLinkId = `${channelName}-None`;
+  }
+  setLinkDateRanges((prevState) => ({
+    ...prevState,
+    [finalLinkId]: ranges.selection,
+  }));
+    navigate("/explore", { state: { linkId: finalLinkId, ranges } });
   };
-  
 
   const handleClick = (event, linkId) => {
     setAnchorEl(event.currentTarget);
@@ -53,27 +53,6 @@ const Dashboard = ({ chatMembers }) => {
   const handleClose = () => {
     setAnchorEl(null);
     setNotificationOpen(false);
-  };
-
-  const filterMembersByDateRange = (members, ranges) => {
-    if (!ranges || !members) return [];
-  
-    return members.filter((channel) => {
-      const filteredMembers = channel.members.filter((member) => {
-        const { chatLink, joinedAt, leftAt } = member;
-        const linkDateRange = ranges[chatLink];
-        if (!linkDateRange) return true;
-  
-        const { startDate, endDate } = linkDateRange;
-        const joinedDate = new Date(joinedAt);
-        const leftDate = leftAt ? new Date(leftAt) : null;
-  
-        return joinedDate <= endDate && (!leftDate || leftDate >= startDate);
-      });
-  
-      // Update the channel's members with the filtered list
-      return { ...channel, members: filteredMembers };
-    });
   };
 
   const getChannelsDetailsByDateRange = () => {
@@ -291,7 +270,7 @@ const Dashboard = ({ chatMembers }) => {
                             >
                               <DateRangePicker
                                 onChange={(range) =>
-                                  handleSelect(link.chatLink, range)
+                                  handleSelect(link.chatLink, range, channel.channelName)
                                 }
                                 showSelectionPreview={true}
                                 moveRangeOnFirstSelection={false}
