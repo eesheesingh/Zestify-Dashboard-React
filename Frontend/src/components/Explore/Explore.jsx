@@ -64,52 +64,51 @@ const Explore = ({ chatMembers }) => {
       channel.channelName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const channelsDetails = filteredChannels
-      .map((channel) => {
-        // Filter members based on the chat link and date range
-        const membersInDateRange = channel.members.filter((member) => {
-          const joinedDate = new Date(member.joinedAt);
-          return (
-            member.chatLink === linkId &&
-            joinedDate >= ranges.selection.startDate &&
-            joinedDate <= ranges.selection.endDate
-          );
-        });
+    const channelsDetails = filteredChannels.map((channel) => {
+      // Filter members based on the chat link and date range
+      const membersInDateRange = channel.members.filter((member) => {
+        const joinedDate = new Date(member.joinedAt);
+        return (
+          member.chatLink === linkId &&
+          joinedDate >= ranges.selection.startDate &&
+          joinedDate <= ranges.selection.endDate
+        );
+      });
 
-        if (membersInDateRange.length > 0) {
-          const linkDetails = membersInDateRange.reduce((acc, member) => {
-            const link = member.chatLink || "None";
+      // Initialize an object to store members grouped by join date
+      const membersByJoinDate = {};
 
-            if (!acc[link]) {
-              acc[link] = {
-                chatLink: link,
-                memberCount: 0,
-                leftMemberCount: 0,
-                uniqueMembers: new Set(),
-              };
-            }
-
-            if (member.leftAt) {
-              acc[link].leftMemberCount++;
-            }
-
-            else {
-              acc[link].memberCount++;
-              acc[link].uniqueMembers.add(member.memberId);
-            }
-
-            return acc;
-          }, {});
-
-          return {
-            channelName: channel.channelName,
-            linkDetails: Object.values(linkDetails),
+      // Group members by join date
+      membersInDateRange.forEach((member) => {
+        const joinedDate = new Date(member.joinedAt).toLocaleDateString(); // Get the join date
+        if (!membersByJoinDate[joinedDate]) {
+          membersByJoinDate[joinedDate] = {
+            total: 0,
+            joined: 0,
+            left: 0,
           };
-        } else {
-          return null; // Return null for channels with no members in the selected date range
         }
-      })
-      .filter(Boolean); // Filter out null values
+        membersByJoinDate[joinedDate].total++;
+        if (!member.leftAt) {
+          membersByJoinDate[joinedDate].joined++;
+        } else {
+          membersByJoinDate[joinedDate].left++;
+        }
+      });
+
+      // Convert the object into an array of objects for easier rendering
+      const data = Object.entries(membersByJoinDate).map(([date, counts]) => ({
+        date,
+        total: counts.total,
+        joined: counts.joined,
+        left: counts.left,
+      }));
+
+      return {
+        channelName: channel.channelName,
+        data,
+      };
+    });
 
     return channelsDetails;
   };
@@ -212,12 +211,13 @@ const Explore = ({ chatMembers }) => {
             <h2>{channelDetail.channelName}</h2>
           </div>
           <div className="channelOptions flex place-content-between pt-5 px-6">
-            {channelDetail.linkDetails.map((linkDetail, index) => (
-              <div key={index} className="chatLinks flex">
-                <h3 className="mr-2 channel-heads">Chat Links:</h3>{" "}
-                <p>{linkDetail.chatLink}</p>
-              </div>
-            ))}
+            {channelDetail.linkDetails &&
+              channelDetail.linkDetails.map((linkDetail, linkIndex) => (
+                <div key={linkIndex} className="chatLinks flex">
+                  <h3 className="mr-2 channel-heads">Chat Links:</h3>{" "}
+                  <p>{linkDetail.chatLink}</p>
+                </div>
+              ))}
             <div className="filterOptions flex">
               <div className="filterIcon channel-heads mr-2">
                 <IoFilter />
@@ -275,14 +275,15 @@ const Explore = ({ chatMembers }) => {
                 </tr>
               </thead>
               <tbody>
-                {channelDetail.linkDetails.map((linkDetail, index) => (
-                  <tr key={index} className="channel-numbers">
-                    <td>{/* Date */}</td>
-                    <td>{linkDetail.memberCount + linkDetail.leftMemberCount}</td>
-                    <td>{linkDetail.memberCount}</td>
-                    <td>{linkDetail.leftMemberCount}</td>
-                  </tr>
-                ))}
+                {channelDetail.data &&
+                  channelDetail.data.map((item, index) => (
+                    <tr key={index} className="channel-numbers">
+                      <td>{item.date}</td>
+                      <td>{item.total}</td>
+                      <td>{item.joined}</td>
+                      <td>{item.left}</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
