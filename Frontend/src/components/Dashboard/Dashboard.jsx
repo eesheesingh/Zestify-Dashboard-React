@@ -17,20 +17,27 @@ import { BsCalendarDateFill } from "react-icons/bs";
 import { MdKeyboardArrowDown } from "react-icons/md";
 // import { useNavigate } from "react-router-dom";
 import NotificationPopup from "../NotificationPop/NotificationPopup";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = ({ chatMembers }) => {
   const [hasNotification, setHasNotification] = useState(true);
+  const [filteredData1, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [notificationOpen, setNotificationOpen] = useState(false); // State to manage notification popup visibility
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const [linkDateRanges, setLinkDateRanges] = useState({});
+  const navigate = useNavigate();
 
   const handleSelect = (linkId, ranges) => {
     setLinkDateRanges((prevState) => ({
       ...prevState,
-      [linkId]: ranges.selection,
+      [linkId]: ranges,
     }));
+    const filteredData = filterMembersByDateRange(chatMembers, ranges);
+    setFilteredData(filteredData);
+    navigate('/explore', { state: { filteredData: filteredData1 } });
   };
+  
 
   const handleClick = (event, linkId) => {
     setAnchorEl(event.currentTarget);
@@ -43,33 +50,43 @@ const Dashboard = ({ chatMembers }) => {
     }));
   };
 
-  const open = Boolean(anchorEl);
-
   const handleClose = () => {
     setAnchorEl(null);
-    setNotificationOpen(false); // Close notification popup
+    setNotificationOpen(false);
   };
 
-  const filterMembersByDateRange = (members, dateRange) => {
-    if (!dateRange || !members) return [];
-
-    const { startDate, endDate } = dateRange;
-    return members.filter((member) => {
-      const joinedAt = new Date(member.joinedAt);
-      const leftAt = member.leftAt ? new Date(member.leftAt) : null;
-      return joinedAt <= endDate && (!leftAt || leftAt >= startDate);
+  const filterMembersByDateRange = (members, ranges) => {
+    if (!ranges || !members) return [];
+  
+    return members.filter((channel) => {
+      const filteredMembers = channel.members.filter((member) => {
+        const { chatLink, joinedAt, leftAt } = member;
+        const linkDateRange = ranges[chatLink];
+        if (!linkDateRange) return true;
+  
+        const { startDate, endDate } = linkDateRange;
+        const joinedDate = new Date(joinedAt);
+        const leftDate = leftAt ? new Date(leftAt) : null;
+  
+        return joinedDate <= endDate && (!leftDate || leftDate >= startDate);
+      });
+  
+      // Update the channel's members with the filtered list
+      return { ...channel, members: filteredMembers };
     });
   };
 
   const getChannelsDetailsByDateRange = () => {
-    // Function to filter channels based on the search query
+    if (!chatMembers) {
+      return [];
+    }
+
     const filteredChannels = chatMembers.filter((channel) =>
       channel.channelName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const channelsDetails = filteredChannels
       .map((channel) => {
-        // Directly use channel.members as we're not filtering by date range
         const members = channel.members;
 
         const linkDetails = members.reduce((acc, member) => {
@@ -101,23 +118,19 @@ const Dashboard = ({ chatMembers }) => {
           linkDetails: Object.values(linkDetails),
         };
       })
-      .filter(Boolean); // Filter out null values to ensure we only return channels with members
+      .filter(Boolean);
 
     return channelsDetails;
   };
 
   return (
     <div className="dashboard-container p-0 sm:ml-60">
-      {/* Dashboard Header */}
       <div className="dashboard-header grid grid-cols-3 gap-4 mb-4">
-        {/* Left: Dashboard Heading */}
         <div className="col-span-1 flex items-center">
           <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
         </div>
 
-        {/* Middle: Search Bar with Search Icon */}
         <div className="col-span-1 flex items-center relative search-bar bg-white rounded-md">
-          {/* Search Bar Input */}
           <input
             type="text"
             placeholder="Search..."
@@ -125,16 +138,13 @@ const Dashboard = ({ chatMembers }) => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          {/* Search Icon */}
           <span className="absolute right-3 text-2xl text-gray-500 search-icon">
             <UilSearch />
           </span>
         </div>
 
-        {/* Right: Bell Icon and Circular Profile Image */}
         <div className="col-span-1 flex items-center justify-end space-x-4">
           <div className="relative text-gray-800">
-            {/* Bell Icon with notification dot */}
             <button
               className="focus:outline-none"
               onClick={() => setHasNotification(!hasNotification)}
@@ -151,7 +161,6 @@ const Dashboard = ({ chatMembers }) => {
           </div>
 
           <div className="profile-image-container">
-            {/* Circular Profile Image */}
             <img src={profileImage} alt="Profile" className="profile-image" />
           </div>
         </div>
@@ -165,7 +174,6 @@ const Dashboard = ({ chatMembers }) => {
           Channel Listing
         </h2>
 
-        {/* Eagle View 1 */}
         <div className="dashboard-view-section mb-4">
           {getChannelsDetailsByDateRange().map((channel, index) => (
             <div className="my-8" key={index}>
@@ -200,7 +208,6 @@ const Dashboard = ({ chatMembers }) => {
                       </ul>
                     </td>
                     <td>
-                      {/* Well-designed dropbox for Agency */}
                       <ul className="agency-dropdown-container">
                         {channel.linkDetails.map((link, linkIndex) => (
                           <li className="mt-4" key={linkIndex}>
@@ -290,7 +297,7 @@ const Dashboard = ({ chatMembers }) => {
                                 moveRangeOnFirstSelection={false}
                                 months={1}
                                 ranges={[
-                                  linkDateRanges[link.chatLink] || {
+                                  {
                                     startDate: new Date(),
                                     endDate: new Date(),
                                     key: "selection",
@@ -311,7 +318,6 @@ const Dashboard = ({ chatMembers }) => {
         </div>
       </div>
 
-      {/* Notification Popup */}
       {notificationOpen && (
         <NotificationPopup
           onClose={() => setNotificationOpen(false)}
