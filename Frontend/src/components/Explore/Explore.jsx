@@ -116,7 +116,18 @@ const Explore = ({ chatMembers }) => {
           <h1 className="text-2xl font-bold text-gray-800">Explore</h1>
         </div>
 
-        <div className="col-span-1"></div>
+        <div className="col-span-1 items-center relative search-bar bg-white rounded-md">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="border-none outline-none py-2 px-8 w-full placeholder-gray-500 text-gray-800"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <span className="absolute right-3 text-2xl text-gray-500 search-icon">
+            <UilSearch />
+          </span>
+        </div>
 
         <div className="col-span-1 flex items-center justify-end space-x-4">
           <div className="col-span-1 relative text-gray-800">
@@ -152,23 +163,6 @@ const Explore = ({ chatMembers }) => {
         </div>
       </div>
 
-      <div className="secondary-div additional-content grid grid-cols-3 gap-4 p-4 bg-[#fff]">
-        <div className="col-span-1 items-center relative search-bar bg-white rounded-md">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="border-none outline-none py-2 px-8 w-full placeholder-gray-500 text-gray-800"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <span className="absolute right-3 text-2xl text-gray-500 search-icon">
-            <UilSearch />
-          </span>
-        </div>
-
-        <div className="col-span-1"></div>
-      </div>
-
       <div className="back-button flex items-center text-2xl font-bold p-6">
         <button
           style={{ display: "flex", alignItems: "center" }}
@@ -178,7 +172,7 @@ const Explore = ({ chatMembers }) => {
           <span className="ml-1">Back</span>
         </button>
       </div>
-      {channelsDetails.map((channelDetail, index) => (
+      { channelsDetails.length > 0 ? channelsDetails.map((channelDetail, index) => (
         <div key={index} className="exploreContainer mx-5 bg-[#fff]">
           <div className="exploreHeading text-2xl font-bold p-4">
             <h2>{channelDetail.channelName}</h2>
@@ -259,7 +253,12 @@ const Explore = ({ chatMembers }) => {
             </table>
           </div>
         </div>
-      ))}
+      )): (
+        <div className="text-center mx-5">
+          <img className="m-auto w-1/4 mb-7" src="/undraw_no_data_re_kwbl 1.png" />
+          <h1 style={{color: "#87878e"}} className="text-2xl font-bold">No Data</h1>
+        </div>
+      )}
     </div>
   );
 };
