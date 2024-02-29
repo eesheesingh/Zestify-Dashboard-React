@@ -1,4 +1,3 @@
-// PageHeader.jsx
 import { UilSearch } from "@iconscout/react-unicons";
 import { LuBell } from "react-icons/lu";
 import profileImage from "../../assets/an-avatar-of-a-brown-guy-looking-at-you-with-cute-smiles-with-transparent-background-hes-wearing-a-627855248.png";

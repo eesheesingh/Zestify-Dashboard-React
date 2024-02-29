@@ -1,0 +1,165 @@
+/* Request.css */
+
+.request-container {
+    margin: 0; /* Remove margin from all sides */
+}
+
+.request-header {
+    background-color: #ffffff; /* White background */
+    padding: 1.5rem 1rem; /* Add padding to the header */
+}
+
+.secondary-div {
+    border-bottom: 1px solid #e5e5e5; /* Light border at the bottom */
+}
+
+.requestButton {
+    padding: 0.75rem 1rem;
+    border: 1px solid #F5F5F7;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.requestButton:hover {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.requestButton svg {
+    color: #8E92BC;
+}
+
+.requestButtons {
+    gap: 1rem;
+}
+
+.back-button svg {
+    border: 1px solid #000;
+    font-size: 40px;
+    padding: 5px;
+    border-radius: 10px;
+    transition: transform 0.2s;
+    -webkit-transition: transform 0.2s;
+    -moz-transition: transform 0.2s;
+    -ms-transition: transform 0.2s;
+    -o-transition: transform 0.2s;
+}
+
+.back-button button {
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+    -webkit-transition: transform 0.2s;
+    -moz-transition: transform 0.2s;
+    -ms-transition: transform 0.2s;
+    -o-transition: transform 0.2s;
+}
+
+.back-button button:hover {
+    transform: scale(1.06);
+    -webkit-transform: scale(1.06);
+    -moz-transform: scale(1.06);
+    -ms-transform: scale(1.06);
+    -o-transform: scale(1.06);
+}
+
+.requestContainer {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    margin: 20px 10px;
+}
+
+.requestHeading {
+    background-color: #e5e5e5;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 10px;
+}
+
+.channelOptions {
+    display: flex;
+    place-content: space-between;
+    padding-top: 20px;
+    padding-left: 6px;
+}
+
+.chatLinks h3,
+.AgencyOptions h3 {
+    color: #b4b4b4;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.chatLinks p,
+.AgencyOptions p {
+    align-items: center;
+    margin: 0;
+    font-weight: bold;
+}
+
+.filterOptions {
+    display: flex;
+    align-items: center;
+}
+
+.filterIcon {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.date-range {
+    display: flex;
+    align-items: center;
+}
+
+.date-range button:active {
+    transform: translateY(1px);
+}
+
+/* Table styles */
+.request-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+/* Table header styles */
+.requestColumns th {
+    background-color: #f8f8f8;
+    padding: 12px;
+    border: none;
+    font-weight: bold;
+}
+
+/* Table cell styles */
+.request-numbers td {
+    padding: 12px;
+    text-align: center;
+    border: none;
+}
+
+.text-left{
+    text-align: left;
+}
+
+/* Alternating row colors for better readability */
+.request-numbers:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+/* Text alignment and styles for specific columns */
+.request-numbers td:nth-child(1),
+.request-numbers td:nth-child(2) {
+    text-align: left;
+    font-weight: bold;
+}
+
+.request-numbers td:nth-child(3) {
+    color: #F10000;
+    font-weight: 600;
+}
