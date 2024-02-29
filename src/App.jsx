@@ -5,7 +5,6 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Overview from './components/Overview/Overview';
 import Settings from './components/Settings/Settings';
 import Explore from './components/Explore/Explore';
-import Profile from './components/Profile/Profile';
 import Request from './components/RequestID/Request';
 import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import ErrorPage from './components/ErrorPage/ErrorPage';
@@ -23,7 +22,6 @@ const App = () => {
         <Route path="requests" element={ chatMembers ? <Request />: <Navigate to="/login" />}   />
         <Route path="explore" element={ chatMembers ? <Explore chatMembers={chatMembers} />: <Navigate to="/login" />}   />
         <Route path="setting" element={ chatMembers ? <Settings chatMembers={chatMembers} />: <Navigate to="/login" />}   />
-        <Route path="profile" element={ chatMembers ? <Profile />: <Navigate to="/login" />}   />
       </Route>
       <Route path="/login" element={<Login setChatMembers={setChatMembers} />} />
     </>

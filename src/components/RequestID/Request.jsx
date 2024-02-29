@@ -30,7 +30,7 @@ const CustomButton = ({ onClick }) => {
   );
 };
 
-const Request = ({chatMembers}) => {
+const Request = ({}) => {
   const navigate = useNavigate();
   const [state, setState] = useState([
     {
