@@ -1,16 +1,15 @@
 // Login.js
 
-import PropTypes from "prop-types"
-import { useEffect, useRef, useState } from 'react';
-import './Login.css';
-import { useNavigate } from 'react-router-dom';
-import Loading from '../Loading/Loading';
-import LoadingBar from 'react-top-loading-bar';
-import { ToastContainer, toast } from 'react-toastify';
+import PropTypes from "prop-types";
+import { useEffect, useRef, useState } from "react";
+import "./Login.css";
+import { useNavigate } from "react-router-dom";
+import Loading from "../Loading/Loading";
+import LoadingBar from "react-top-loading-bar";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Login = ({setChatMembers}) => {
-
+const Login = ({ setChatMembers }) => {
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -21,35 +20,37 @@ const Login = ({setChatMembers}) => {
       position: "bottom-left",
     });
 
-    useEffect(() => {
-      const sessionData = sessionStorage.getItem("chatId");
-      if (sessionData) {
-        setLoading(true);
-        fetch(`http://localhost:5000/api/chatMembers?chatId=${sessionData}`)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(handleError("User not Found!"), navigate('/login'));
-            }
-            return response.json();
-          })
-          .then(data => {
-            setChatMembers(data);
-            navigate('/');
-          })
-          .catch(error => {
-            handleError(error.message);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      }
-    }, [navigate, setChatMembers]);
+  useEffect(() => {
+    const sessionData = sessionStorage.getItem("chatId");
+    if (sessionData) {
+      setLoading(true);
+      fetch(`http://localhost:5000/api/chatMembers?chatId=${sessionData}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(handleError("User not Found!"), navigate("/login"));
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setChatMembers(data);
+          navigate("/");
+        })
+        .catch((error) => {
+          handleError(error.message);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [navigate, setChatMembers]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       ref.current.continuousStart();
-      const response = await fetch(`http://localhost:5000/api/chatMembers?chatId=${inputValue}`);
+      const response = await fetch(
+        `http://localhost:5000/api/chatMembers?chatId=${inputValue}`
+      );
 
       if (!inputValue) {
         throw new Error(handleError("Chat ID is required!"));
@@ -61,7 +62,7 @@ const Login = ({setChatMembers}) => {
       const data = await response.json();
       setChatMembers(data);
       sessionStorage.setItem("chatId", inputValue);
-      navigate('/');
+      navigate("/");
     } catch (error) {
       null;
     } finally {
@@ -70,16 +71,16 @@ const Login = ({setChatMembers}) => {
   };
 
   if (loading) {
-    return (
-      <Loading />
-    )
+    return <Loading />;
   }
 
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2 className='loginHeading font-bold'>Login</h2>
-        <p className='loginPara'>Full access to in any of our products Full access to in any of </p>
+        <h2 className="loginHeading font-bold">Login</h2>
+        <p className="loginPara">
+          Enter your Mobile Number to access the Data.
+        </p>
         <div className="loginForm">
           <form onSubmit={handleSubmit}>
             <div className="input-container">
@@ -102,7 +103,7 @@ const Login = ({setChatMembers}) => {
 };
 
 Login.propTypes = {
-  setChatMembers: PropTypes.any
-}
+  setChatMembers: PropTypes.any,
+};
 
 export default Login;

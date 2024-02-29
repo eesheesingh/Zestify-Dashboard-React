@@ -1,12 +1,8 @@
-
 // Dashboard.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./Dashboard.css";
-import { UilSearch } from "@iconscout/react-unicons";
-import { LuBell } from "react-icons/lu";
 import { IoFilter } from "react-icons/io5";
-import profileImage from "../../assets/an-avatar-of-a-brown-guy-looking-at-you-with-cute-smiles-with-transparent-background-hes-wearing-a-627855248.png";
 import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
@@ -15,28 +11,30 @@ import "react-date-range/dist/theme/default.css";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import { BsCalendarDateFill } from "react-icons/bs";
+import { GoEye } from "react-icons/go";
 import { MdKeyboardArrowDown } from "react-icons/md";
-// import { useNavigate } from "react-router-dom";
-import NotificationPopup from "../NotificationPop/NotificationPopup";
 import { useNavigate } from "react-router-dom";
+import NotificationPopup from "../NotificationPop/NotificationPopup";
+import PageHeader from "../Header/Header";
 
 const Dashboard = ({ chatMembers }) => {
   const [hasNotification, setHasNotification] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(5);
   const [linkDateRanges, setLinkDateRanges] = useState({});
   const navigate = useNavigate();
 
   const handleSelect = (linkId, ranges, channelName) => {
     let finalLinkId = linkId;
-  if (linkId === "None") {
-    finalLinkId = `${channelName}-None`;
-  }
-  setLinkDateRanges((prevState) => ({
-    ...prevState,
-    [finalLinkId]: ranges.selection,
-  }));
+    if (linkId === "None") {
+      finalLinkId = `${channelName}-None`;
+    }
+    setLinkDateRanges((prevState) => ({
+      ...prevState,
+      [finalLinkId]: ranges.selection,
+    }));
     navigate("/explore", { state: { linkId: finalLinkId, ranges } });
   };
 
@@ -55,6 +53,11 @@ const Dashboard = ({ chatMembers }) => {
     setAnchorEl(null);
     setNotificationOpen(false);
   };
+
+  useEffect(() => {
+    // Update notification count whenever hasNotification changes
+    setNotificationCount(hasNotification ? 5 : 0);
+  }, [hasNotification]);
 
   const getChannelsDetailsByDateRange = () => {
     if (!chatMembers) {
@@ -105,46 +108,13 @@ const Dashboard = ({ chatMembers }) => {
 
   return (
     <div className="dashboard-container p-0 sm:ml-60">
-      <div className="dashboard-header grid grid-cols-3 gap-4 mb-4">
-        <div className="col-span-1 flex items-center">
-          <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-        </div>
-
-        <div className="col-span-1 flex items-center relative search-bar bg-white rounded-md">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="border-none outline-none py-2 px-8 w-full placeholder-gray-500 text-gray-800"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <span className="absolute right-3 text-2xl text-gray-500 search-icon">
-            <UilSearch />
-          </span>
-        </div>
-
-        <div className="col-span-1 flex items-center justify-end space-x-4">
-          <div className="relative text-gray-800">
-            <button
-              className="focus:outline-none"
-              onClick={() => setHasNotification(!hasNotification)}
-            >
-              <div
-                className={`text-2xl bell-icon ${
-                  hasNotification ? "has-notification" : ""
-                }`}
-              >
-                <LuBell className="bell" />
-              </div>
-              {hasNotification && <div className="notification-dot"></div>}
-            </button>
-          </div>
-
-          <div className="profile-image-container">
-            <img src={profileImage} alt="Profile" className="profile-image" />
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="Dashboard"
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        hasNotification={hasNotification}
+        setHasNotification={setHasNotification}
+      />
 
       <div className="dashboard-container p-4">
         <h2
@@ -171,126 +141,107 @@ const Dashboard = ({ chatMembers }) => {
                     <th className="filter-header">
                       <div className="filterIcon">
                         <IoFilter />
-                        Filter
+                        <span>Filter</span>
                       </div>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>
-                      <ul>
-                        {channel.linkDetails.map((link, linkIndex) => (
-                          <li className="mt-7" key={linkIndex}>
-                            {link.chatLink}
-                          </li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td>
-                      <ul className="agency-dropdown-container">
-                        {channel.linkDetails.map((link, linkIndex) => (
-                          <li className="mt-4" key={linkIndex}>
-                            <input
-                              style={{ padding: "0.6rem 0 0.3rem 0" }}
-                              className="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                              type="text"
-                              placeholder="enter"
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td>
-                      <ul>
-                        {channel.linkDetails.map((link, linkIndex) => (
-                          <li className="mt-7" key={linkIndex}>
-                            {link.memberCount + link.leftMemberCount}
-                          </li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td>
-                      <ul>
-                        {channel.linkDetails.map((link, linkIndex) => (
-                          <li className="mt-7" key={linkIndex}>
-                            +{link.memberCount}
-                          </li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td>
-                      <ul>
-                        {channel.linkDetails.map((link, linkIndex) => (
-                          <li className="mt-7" key={linkIndex}>
-                            -{link.leftMemberCount}
-                          </li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td>
-                      {channel.linkDetails.map((link, linkIndex) => (
-                        <ul key={linkIndex}>
-                          <div style={{ height: "2rem" }} className="mt-4">
-                            <Button
-                              onClick={(event) =>
-                                handleClick(event, link.chatLink)
-                              }
+                  {channel.linkDetails.map((link, linkIndex) => (
+                    <tr key={linkIndex}>
+                      <td>{link.chatLink}</td>
+                      <td>
+                        <div className="agency-inputs">
+                          {notificationCount > 0 && Math.random() < 0.3 && (
+                            <div className="notification-bubble">
+                              {notificationCount}
+                            </div>
+                          )}
+                          <input
+                            className="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            placeholder="Enter ID"
+                          />
+                          <span className="eye-icon">
+                            <GoEye
                               style={{
-                                backgroundColor: "transparent",
-                                color: "#4a5568",
-                                border: "1px solid #4a5568",
-                                borderRadius: "8px",
+                                cursor:
+                                  notificationCount > 0
+                                    ? "pointer"
+                                    : "not-allowed",
+                                opacity: notificationCount > 0 ? 1 : 0.5,
+                              }}
+                            />
+                          </span>
+                        </div>
+                      </td>
+                      <td>{link.memberCount}</td>
+                      <td>+{link.memberCount - link.leftMemberCount}</td>
+                      <td>-{link.leftMemberCount}</td>
+                      <td>
+                        <div style={{ height: "2rem" }} className="mt-2">
+                          <Button
+                            onClick={(event) =>
+                              handleClick(event, link.chatLink)
+                            }
+                            style={{
+                              backgroundColor: "transparent",
+                              color: "#4a5568",
+                              border: "1px solid #4a5568",
+                              borderRadius: "8px",
+                            }}
+                          >
+                            <BsCalendarDateFill />
+                            <span
+                              style={{
+                                marginLeft: "0.5rem",
+                                textTransform: "none",
                               }}
                             >
-                              <BsCalendarDateFill />
-                              <span
-                                style={{
-                                  marginLeft: "0.5rem",
-                                  textTransform: "none",
-                                }}
-                              >
-                                Date Range
-                              </span>
-                              <MdKeyboardArrowDown />
-                            </Button>
-                            <Popover
-                              open={
-                                open && Boolean(linkDateRanges[link.chatLink])
+                              Date Range
+                            </span>
+                            <MdKeyboardArrowDown />
+                          </Button>
+                          <Popover
+                            open={
+                              open && Boolean(linkDateRanges[link.chatLink])
+                            }
+                            anchorEl={anchorEl}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left",
+                            }}
+                            transformOrigin={{
+                              vertical: "top",
+                              horizontal: "left",
+                            }}
+                          >
+                            <DateRangePicker
+                              onChange={(range) =>
+                                handleSelect(
+                                  link.chatLink,
+                                  range,
+                                  channel.channelName
+                                )
                               }
-                              anchorEl={anchorEl}
-                              onClose={handleClose}
-                              anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
-                              }}
-                              transformOrigin={{
-                                vertical: "top",
-                                horizontal: "left",
-                              }}
-                            >
-                              <DateRangePicker
-                                onChange={(range) =>
-                                  handleSelect(link.chatLink, range, channel.channelName)
-                                }
-                                showSelectionPreview={true}
-                                moveRangeOnFirstSelection={false}
-                                months={1}
-                                ranges={[
-                                  {
-                                    startDate: new Date(),
-                                    endDate: new Date(),
-                                    key: "selection",
-                                  },
-                                ]}
-                                direction="horizontal"
-                              />
-                            </Popover>
-                          </div>
-                        </ul>
-                      ))}
-                    </td>
-                  </tr>
+                              showSelectionPreview={true}
+                              moveRangeOnFirstSelection={false}
+                              months={1}
+                              ranges={[
+                                {
+                                  startDate: new Date(),
+                                  endDate: new Date(),
+                                  key: "selection",
+                                },
+                              ]}
+                              direction="horizontal"
+                            />
+                          </Popover>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
