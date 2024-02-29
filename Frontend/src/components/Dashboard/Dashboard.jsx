@@ -51,13 +51,12 @@ const Dashboard = ({ chatMembers }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
-    setNotificationOpen(false);
   };
 
   useEffect(() => {
     // Update notification count whenever hasNotification changes
     setNotificationCount(hasNotification ? 5 : 0);
-  }, [hasNotification]);
+  }, []);
 
   const getChannelsDetailsByDateRange = () => {
     if (!chatMembers) {
@@ -73,7 +72,7 @@ const Dashboard = ({ chatMembers }) => {
         const members = channel.members;
 
         const linkDetails = members.reduce((acc, member) => {
-          const link = member.chatLink || "None";
+          const link = member.chatLink || `${channel.channelName}-None`;
 
           if (!acc[link]) {
             acc[link] = {
@@ -182,7 +181,7 @@ const Dashboard = ({ chatMembers }) => {
                         <div style={{ height: "2rem" }} className="mt-2">
                           <Button
                             onClick={(event) =>
-                              handleClick(event, link.chatLink)
+                              handleClick(event, link.chatLink === "None" ? `${channel.channelName}-None` : link.chatLink)
                             }
                             style={{
                               backgroundColor: "transparent",
@@ -203,9 +202,8 @@ const Dashboard = ({ chatMembers }) => {
                             <MdKeyboardArrowDown />
                           </Button>
                           <Popover
-                            open={
-                              open && Boolean(linkDateRanges[link.chatLink])
-                            }
+                            key={link.chatLink === "None" ? `${channel.channelName}-None` : link.chatLink}
+                            open={open && Boolean(linkDateRanges[link.chatLink === "None" ? `${channel.channelName}-None` : link.chatLink] )}
                             anchorEl={anchorEl}
                             onClose={handleClose}
                             anchorOrigin={{

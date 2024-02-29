@@ -2,8 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import "./Explore.css";
 import { UilSearch } from "@iconscout/react-unicons";
-import { LuBell, LuLayoutDashboard } from "react-icons/lu";
-import { IoFilterOutline } from "react-icons/io5";
+import { LuBell } from "react-icons/lu";
 import { FaAngleLeft } from "react-icons/fa6";
 import { addDays } from "date-fns";
 import { IoFilter } from "react-icons/io5";
@@ -21,6 +20,13 @@ const Explore = ({ chatMembers }) => {
   const [hasNotification, setHasNotification] = useState(true);
   const [showNotificationPopup, setShowNotificationPopup] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      key: "selection",
+    },
+  ]);
   const location = useLocation();
 
   const handleNotificationClick = () => {
@@ -32,20 +38,11 @@ const Explore = ({ chatMembers }) => {
     setShowNotificationPopup(false);
   };
 
-  const [state, setState] = useState([
-    {
-      startDate: new Date(),
-      endDate: addDays(new Date(), 7),
-      key: "selection",
-    },
-  ]);
-
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleSelect = (ranges) => {
-    console.log(ranges); // { selection: { startDate, endDate } }
     setState([ranges.selection]);
-    setAnchorEl(null); // Close the popover after selecting the date range
+    setAnchorEl(null);
   };
 
   const handleClick = (event) => {
@@ -59,34 +56,33 @@ const Explore = ({ chatMembers }) => {
   const open = Boolean(anchorEl);
 
   const getChannelsDetailsByDateRange = (linkId, ranges) => {
-    // Function to filter channels based on the search query
     const filteredChannels = chatMembers.filter((channel) =>
       channel.channelName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const channelsDetails = filteredChannels.map((channel) => {
-      // Filter members based on the chat link and date range
       const membersInDateRange = channel.members.filter((member) => {
         const joinedDate = new Date(member.joinedAt);
         return (
-          member.chatLink === linkId &&
+          (member.chatLink === linkId || `${channel.channelName}-None` === linkId) &&
           joinedDate >= ranges.selection.startDate &&
           joinedDate <= ranges.selection.endDate
         );
       });
 
-      // Initialize an object to store members grouped by join date
       const membersByJoinDate = {};
 
-      // Group members by join date
       membersInDateRange.forEach((member) => {
-        const joinedDate = new Date(member.joinedAt).toLocaleDateString(); // Get the join date
+        // Manual formatting to dd/mm/yyyy
+        const joinedDateObj = new Date(member.joinedAt);
+        const joinedDate = [
+          joinedDateObj.getDate().toString().padStart(2, '0'),
+          (joinedDateObj.getMonth() + 1).toString().padStart(2, '0'),
+          joinedDateObj.getFullYear(),
+        ].join('/');
+      
         if (!membersByJoinDate[joinedDate]) {
-          membersByJoinDate[joinedDate] = {
-            total: 0,
-            joined: 0,
-            left: 0,
-          };
+          membersByJoinDate[joinedDate] = { total: 0, joined: 0, left: 0 };
         }
         membersByJoinDate[joinedDate].total++;
         if (!member.leftAt) {
@@ -94,24 +90,22 @@ const Explore = ({ chatMembers }) => {
         } else {
           membersByJoinDate[joinedDate].left++;
         }
-      });
+      });    
 
-      // Convert the object into an array of objects for easier rendering
       const data = Object.entries(membersByJoinDate).map(([date, counts]) => ({
-        date,
-        total: counts.total,
-        joined: counts.joined,
-        left: counts.left,
+        date, total: counts.total, joined: counts.joined, left: counts.left,
       }));
 
       return {
         channelName: channel.channelName,
         data,
+        linkId
       };
-    });
+    }).filter(channel => channel.data.length > 0);
 
     return channelsDetails;
-  };
+};
+
   const { linkId, ranges } = location.state;
   const channelsDetails = getChannelsDetailsByDateRange(linkId, ranges);
 
@@ -173,27 +167,6 @@ const Explore = ({ chatMembers }) => {
         </div>
 
         <div className="col-span-1"></div>
-
-        <div className="col-span-1 flex items-center justify-end space-x-4">
-          <div className="exploreButtons flex items-center">
-            <button className="exploreButton focus:outline-none flex items-center">
-              <LuLayoutDashboard className="text-2xl text-gray-800" />
-              <span className="ml-1" style={{ fontSize: "small" }}>
-                Category
-              </span>
-            </button>
-
-            <button className="exploreButton focus:outline-none flex items-center ml-4">
-              <IoFilterOutline className="text-2xl" />
-              <span
-                className=" ml-1"
-                style={{ paddingRight: "3rem", fontSize: "small" }}
-              >
-                Sort By:
-              </span>
-            </button>
-          </div>
-        </div>
       </div>
 
       <div className="back-button flex items-center text-2xl font-bold p-6">
@@ -211,13 +184,11 @@ const Explore = ({ chatMembers }) => {
             <h2>{channelDetail.channelName}</h2>
           </div>
           <div className="channelOptions flex place-content-between pt-5 px-6">
-            {channelDetail.linkDetails &&
-              channelDetail.linkDetails.map((linkDetail, linkIndex) => (
-                <div key={linkIndex} className="chatLinks flex">
-                  <h3 className="mr-2 channel-heads">Chat Links:</h3>{" "}
-                  <p>{linkDetail.chatLink}</p>
+            
+                <div key={index} className="chatLinks flex">
+                  <h3 className="mr-2 channel-heads">Chat Link: </h3>
+                  <p>{channelDetail.linkId}</p>
                 </div>
-              ))}
             <div className="filterOptions flex">
               <div className="filterIcon channel-heads mr-2">
                 <IoFilter />
