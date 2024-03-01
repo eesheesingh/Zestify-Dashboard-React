@@ -1,10 +1,14 @@
 // PageHeader.jsx
+import { useState } from "react";
 import { UilSearch } from "@iconscout/react-unicons";
 import { LuBell } from "react-icons/lu";
 import profileImage from "../../assets/an-avatar-of-a-brown-guy-looking-at-you-with-cute-smiles-with-transparent-background-hes-wearing-a-627855248.png";
 import PropTypes from "prop-types";
+import ProfileSidebar from "../Profile/ProfileSidebar";
 
 const PageHeader = ({ title, searchQuery, setSearchQuery, hasNotification, setHasNotification }) => {
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [isProfileSidebarOpen, setProfileSidebarOpen] = useState(false);
   return (
     <div className="dashboard-header grid grid-cols-3 gap-4 mb-4">
       {/* Left: Dashboard Heading */}
@@ -28,8 +32,8 @@ const PageHeader = ({ title, searchQuery, setSearchQuery, hasNotification, setHa
         </span>
       </div>
 
-      {/* Right: Bell Icon and Circular Profile Image */}
-      <div className="col-span-1 flex items-center justify-end space-x-4">
+     {/* Right: Bell Icon and Circular Profile Image */}
+     <div className="col-span-1 flex items-center justify-end space-x-4">
         <div className="relative text-gray-800">
           {/* Bell Icon with notification dot */}
           <button
@@ -48,13 +52,28 @@ const PageHeader = ({ title, searchQuery, setSearchQuery, hasNotification, setHa
         </div>
 
         <div className="profile-image-container">
-          {/* Circular Profile Image */}
-          <img src={profileImage} alt="Profile" className="profile-image" />
+          {/* Circular Profile Image with onClick to open the sidebar */}
+          <button onClick={() => setProfileSidebarOpen(true)}>
+            <img
+              src={profilePicture ? URL.createObjectURL(profilePicture) : profileImage}
+              alt="Profile"
+              className="profile-image"
+            />
+          </button>
         </div>
       </div>
+
+      {/* Render the ProfileSidebar when isProfileSidebarOpen is true */}
+      {isProfileSidebarOpen && (
+        <ProfileSidebar
+          onClose={() => setProfileSidebarOpen(false)}
+          setProfilePicture={setProfilePicture}
+        />
+      )}
     </div>
   );
 };
+
 
 PageHeader.propTypes = {
   title: PropTypes.string.isRequired,
