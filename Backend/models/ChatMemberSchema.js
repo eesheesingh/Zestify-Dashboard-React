@@ -4,6 +4,13 @@ const mongoose = require('mongoose')
 const chatMemberSchema = new mongoose.Schema({
     chatId: { type: String, required: true, index: true },
     channelName: { type: String, required: true, index: true },
+    phone: { 
+      type: Number,
+      unique: true,
+      minlength: [10, "Phone number should have minimum 10 digits"],
+      maxlength: [10, "Phone number should have maximum 10 digits"],
+      match: [/^\d{10}$/, "Phone number should only contain digits"]
+    },
     joinedMembersCount: { type: Number, default: 0 },
     leftMembersCount: { type: Number, default: 0 },
     members: [{
@@ -14,10 +21,8 @@ const chatMemberSchema = new mongoose.Schema({
     }],
   });
   
-  // Create a compound index for channelName and memberId in members array
   chatMemberSchema.index({ channelName: 1, 'members.memberId': 1 });
 
-  // Create a model from the schema
   const ChatMember = mongoose.model('ChatMember', chatMemberSchema);
 
   module.exports = ChatMember;

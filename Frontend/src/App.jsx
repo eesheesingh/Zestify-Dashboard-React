@@ -7,8 +7,10 @@ import Explore from './components/Explore/Explore'
 import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import ErrorPage from './components/ErrorPage/ErrorPage';
 import Login from "./components/LoginSignUp/Login"
+import Signup from './components/LoginSignUp/Signup';
 import Overview from "./components/Overview/Overview"
-import Profile from "./components/Profile/Profile"
+import Request from "./components/RequestID/Request"
+import Profile from "./components/Profile/ProfileSidebar"
 import { useState } from 'react';
 
 const App = () => {
@@ -21,9 +23,11 @@ const App = () => {
       <Route path='explore' element= { chatMembers ? <Explore chatMembers={chatMembers} /> : <Navigate to="/login" />} />
       <Route path="overview" element={ chatMembers ? <Overview /> : <Navigate to="/login" />} />
       <Route path='setting' element= { chatMembers ? <Settings chatMembers={chatMembers} /> : <Navigate to="/login" />} />
+      <Route path="requests" element={ chatMembers ? <Request /> : <Navigate to="/login" />} /> 
       <Route path="profile" element={ chatMembers ? <Profile /> : <Navigate to="/login" />} /> 
     </Route>
     <Route path='/login' element={<Login setChatMembers={setChatMembers} />} />
+    <Route path='/signup' element={<Signup/>} />
     </>
   ))
 

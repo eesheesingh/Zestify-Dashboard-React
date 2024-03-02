@@ -8,7 +8,7 @@ import PageHeader from "../Header/Header";
 import { DateRangePicker } from "react-date-range";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const CustomButton = ({ onClick }) => {
   return (
@@ -30,8 +30,9 @@ const CustomButton = ({ onClick }) => {
   );
 };
 
-const Request = ({}) => {
+const Request = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -57,6 +58,7 @@ const Request = ({}) => {
   };
 
   const open = Boolean(anchorEl);
+  const {chatLink} = location.state;
 
   return (
     <div className="dashboard-container p-0 sm:ml-60">
@@ -86,7 +88,7 @@ const Request = ({}) => {
         <div className="channelOptions flex place-content-between pt-5 px-6">
           <div className="chatLinks flex">
             <h3 className="mr-2 channel-heads">Chat Links:</h3>{" "}
-            <p>https://t.me/+qCJbGLeN</p>
+            <p>{chatLink}</p>
           </div>
 
           <div className="AgencyOptions flex text-neutral-600">
@@ -143,38 +145,38 @@ const Request = ({}) => {
               <tr className="request-numbers">
                 <td>12/02/2024</td>
                 <td>123456</td>
-                <td>Remove</td>
+                <td><button>Remove</button></td>
               </tr>
 
               <tr className="request-numbers">
                 <td>13/02/2024</td>
                 <td>789012</td>
-                <td>Remove</td>
+                <td><button>Remove</button></td>
               </tr>
 
               {/* Add more rows as needed */}
               <tr className="request-numbers">
                 <td>14/02/2024</td>
                 <td>345678</td>
-                <td>Remove</td>
+                <td><button>Remove</button></td>
               </tr>
 
               <tr className="request-numbers">
                 <td>15/02/2024</td>
                 <td>901234</td>
-                <td>Remove</td>
+                <td><button>Remove</button></td>
               </tr>
 
               <tr className="request-numbers">
                 <td>16/02/2024</td>
                 <td>567890</td>
-                <td>Remove</td>
+                <td><button>Remove</button></td>
               </tr>
 
               <tr className="request-numbers">
                 <td>17/02/2024</td>
                 <td>234567</td>
-                <td>Remove</td>
+                <td><button>Remove</button></td>
               </tr>
             </tbody>
           </table>

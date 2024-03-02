@@ -38,6 +38,10 @@ const Dashboard = ({ chatMembers }) => {
     navigate("/explore", { state: { linkId: finalLinkId, ranges } });
   };
 
+  const handleRequest = (link) => {
+    navigate("/requests", {state: { chatLink: link }});
+  }
+
   const handleClick = (event, linkId) => {
     setAnchorEl(event.currentTarget);
     // Update the linkId in the state
@@ -157,21 +161,21 @@ const Dashboard = ({ chatMembers }) => {
                             </div>
                           )}
                           <input
+                            name={link.chatLink}
                             className="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             placeholder="Enter ID"
                           />
-                          <span className="eye-icon">
-                            <GoEye
+                          <button onClick={() => handleRequest(link.chatLink === "None" ? `${channel.channelName}-None`:link.chatLink )}>
+                            <span className="eye-icon">
+                              <GoEye
                               style={{
                                 cursor:
-                                  notificationCount > 0
-                                    ? "pointer"
-                                    : "not-allowed",
-                                opacity: notificationCount > 0 ? 1 : 0.5,
+                                  notificationCount > 0 ? "pointer" : "not-allowed", opacity: notificationCount > 0 ? 1 : 0.5,
                               }}
                             />
-                          </span>
+                            </span>
+                          </button>
                         </div>
                       </td>
                       <td>{link.memberCount}</td>
@@ -181,7 +185,12 @@ const Dashboard = ({ chatMembers }) => {
                         <div style={{ height: "2rem" }} className="mt-2">
                           <Button
                             onClick={(event) =>
-                              handleClick(event, link.chatLink === "None" ? `${channel.channelName}-None` : link.chatLink)
+                              handleClick(
+                                event,
+                                link.chatLink === "None"
+                                  ? `${channel.channelName}-None`
+                                  : link.chatLink
+                              )
                             }
                             style={{
                               backgroundColor: "transparent",
@@ -202,8 +211,21 @@ const Dashboard = ({ chatMembers }) => {
                             <MdKeyboardArrowDown />
                           </Button>
                           <Popover
-                            key={link.chatLink === "None" ? `${channel.channelName}-None` : link.chatLink}
-                            open={open && Boolean(linkDateRanges[link.chatLink === "None" ? `${channel.channelName}-None` : link.chatLink] )}
+                            key={
+                              link.chatLink === "None"
+                                ? `${channel.channelName}-None`
+                                : link.chatLink
+                            }
+                            open={
+                              open &&
+                              Boolean(
+                                linkDateRanges[
+                                  link.chatLink === "None"
+                                    ? `${channel.channelName}-None`
+                                    : link.chatLink
+                                ]
+                              )
+                            }
                             anchorEl={anchorEl}
                             onClose={handleClose}
                             anchorOrigin={{

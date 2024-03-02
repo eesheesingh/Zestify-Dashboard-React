@@ -1,4 +1,4 @@
-/* Login.css */
+/* Signup.css */
 
 .login-container {
     display: flex;
@@ -34,14 +34,14 @@
     color: #555;
   }
 
-  .loginBottomPara > a {
+  .loginBottomPara > span {
     color: navy;
   }
 
-  .loginBottomPara > a:hover {
+  .loginBottomPara > span:hover {
     color: lightblue;
   }
-
+  
   .input-container {
     position: relative;
     margin-bottom: 20px;

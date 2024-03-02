@@ -3,7 +3,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import "./Login.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Loading from "../Loading/Loading";
 import LoadingBar from "react-top-loading-bar";
 import { ToastContainer, toast } from "react-toastify";
@@ -13,10 +13,11 @@ const Login = ({ setChatMembers }) => {
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const ref = useRef(null);
 
   const handleError = (err) =>
-    toast.error(err, {
+    toast.info(err, {
       position: "bottom-left",
     });
 
@@ -43,6 +44,12 @@ const Login = ({ setChatMembers }) => {
         });
     }
   }, [navigate, setChatMembers]);
+
+  useEffect(() => {
+    if (location.state && location.state.phone) {
+      setInputValue(location.state.phone);
+    }
+  }, [location.state]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,16 +93,21 @@ const Login = ({ setChatMembers }) => {
             <div className="input-container">
               <input
                 type="text"
-                placeholder="Enter your Number or  ID Number"
+                placeholder="Enter your Number or Chat ID"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 required
+                pattern="[6-9]{1}[0-9]{9}"
+                title="Please enter valid phone number"
               />
             </div>
             <button type="submit">Continue</button>
           </form>
           <LoadingBar color="red" ref={ref} />
         </div>
+        <p className="loginBottomPara">
+          <a href="/signup">Haven&apos;t Signed-Up yet? Click here</a>
+        </p>
         <ToastContainer />
       </div>
     </div>
