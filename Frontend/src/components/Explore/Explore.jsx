@@ -254,8 +254,8 @@ const Explore = ({ chatMembers }) => {
           </div>
         </div>
       )): (
-        <div className="text-center mx-5">
-          <img className="m-auto w-1/4 mb-7" src="/undraw_no_data_re_kwbl 1.png" />
+        <div className="text-center">
+          <img className="mx-auto mt-14 w-1/4 mb-7" src="/undraw_no_data_re_kwbl 1.png" />
           <h1 style={{color: "#87878e"}} className="text-2xl font-bold">No Data</h1>
         </div>
       )}

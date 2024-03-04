@@ -89,19 +89,19 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
+          <Link to="/overview"
+            className={`menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group ${isLinkActive('/overview') ? 'active' : ''}`}
+          >
+            <IoSettingsOutline className='text-2xl' />
+            <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Overview</span>
+          </Link>
+        </li>
+        <li>
           <Link to="/setting"
             className={`menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group ${isLinkActive('/setting') ? 'active' : ''}`}
           >
             <IoSettingsOutline className='text-2xl' />
             <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Settings</span>
-          </Link>
-        </li>
-        <li>
-          <Link to="/overview"
-            className={`menu-item flex items-center px-4 py-3 text-gray-900 rounded-lg hover:bg-gray-200 group ${isLinkActive('/setting') ? 'active' : ''}`}
-          >
-            <IoSettingsOutline className='text-2xl' />
-            <span className="text-base font-bold flex-1 ms-3 whitespace-nowrap">Overview</span>
           </Link>
         </li>
       </ul>

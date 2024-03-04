@@ -22,6 +22,7 @@ const Dashboard = ({ chatMembers }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationCount, setNotificationCount] = useState(5);
   const [linkDateRanges, setLinkDateRanges] = useState({});
+  const [inputValues, setInputValues] = useState({});
   const navigate = useNavigate();
 
   const handleSelect = (linkId, ranges, channelName) => {
@@ -42,7 +43,6 @@ const Dashboard = ({ chatMembers }) => {
 
   const handleClick = (event, linkId) => {
     setAnchorEl(event.currentTarget);
-    // Update the linkId in the state
     setLinkDateRanges((prevState) => ({
       ...prevState,
       [linkId]: prevState[linkId]
@@ -54,6 +54,35 @@ const Dashboard = ({ chatMembers }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleInputValue = (e, linkId) => {
+    setInputValues(prevInputValues => ({
+        ...prevInputValues,
+        [linkId]: e.target.value
+    }));
+};
+
+const handleInputSubmit = (e, linkId) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const chatId = inputValues[linkId];
+        console.log('Link', linkId, ':', chatId);
+        fetch(
+          "http://localhost:5000/api/chatMembers/requestId",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ linkId, chatId }),
+          }
+        );
+        setInputValues(prevInputValues => ({
+            ...prevInputValues,
+            [linkId]: ''
+        }));
+    }
+};
 
   useEffect(() => {
     // Update notification count whenever hasNotification changes
@@ -163,6 +192,9 @@ const Dashboard = ({ chatMembers }) => {
                             className="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             placeholder="Enter ID"
+                            value={inputValues[link.chatLink === "None" ? `${channel.channelName}-None` : link.chatLink] || ''}
+                            onChange={(e) => handleInputValue(e, link.chatLink === "None" ? `${channel.channelName}-None`:link.chatLink)}
+                            onKeyDown={(e) => handleInputSubmit(e, link.chatLink === "None" ? `${channel.channelName}-None`:link.chatLink)}
                           />
                           <button onClick={() => handleRequest(link.chatLink === "None" ? `${channel.channelName}-None`:link.chatLink )}>
                             <span className="eye-icon">

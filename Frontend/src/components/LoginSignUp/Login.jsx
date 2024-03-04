@@ -101,7 +101,7 @@ const Login = ({ setChatMembers }) => {
             </div>
             <button type="submit">Continue</button>
           </form>
-          <LoadingBar color="red" ref={ref} />
+          <LoadingBar color="blue" ref={ref} />
         </div>
         <p className="loginBottomPara">
           <a href="/signup">Haven&apos;t Signed-Up yet? Click here</a>
