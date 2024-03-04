@@ -97,8 +97,6 @@ const Login = ({ setChatMembers }) => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 required
-                pattern="[6-9]{1}[0-9]{9}"
-                title="Please enter valid phone number"
               />
             </div>
             <button type="submit">Continue</button>

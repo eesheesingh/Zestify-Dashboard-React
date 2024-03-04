@@ -14,14 +14,12 @@ import { BsCalendarDateFill } from "react-icons/bs";
 import { GoEye } from "react-icons/go";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import NotificationPopup from "../NotificationPop/NotificationPopup";
 import PageHeader from "../Header/Header";
 
 const Dashboard = ({ chatMembers }) => {
   const [hasNotification, setHasNotification] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [notificationOpen, setNotificationOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(5);
   const [linkDateRanges, setLinkDateRanges] = useState({});
   const navigate = useNavigate();
@@ -268,17 +266,6 @@ const Dashboard = ({ chatMembers }) => {
           ))}
         </div>
       </div>
-
-      {notificationOpen && (
-        <NotificationPopup
-          onClose={() => setNotificationOpen(false)}
-          notifications={[
-            { message: "Notification 1", date: "2024-02-26" },
-            { message: "Notification 2", date: "2024-02-27" },
-            { message: "Notification 3", date: "2024-02-28" },
-          ]}
-        />
-      )}
     </div>
   );
 };
