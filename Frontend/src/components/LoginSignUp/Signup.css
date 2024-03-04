@@ -1,11 +1,11 @@
-/* Login.css */
+/* Signup.css */
 
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: url('C:\Users\chiro\OneDrive\Desktop\HailGro Websites\Zestify-Dashboard-React\src\assets\Login-bg.png') center/cover no-repeat; /* Replace 'your-background-image.jpg' with your actual image path */
+    background: url('image\ 4.png') center/cover no-repeat;
     text-align: center;
   }
   
@@ -28,6 +28,19 @@
     margin-bottom: 30px;
     color: #555;
   }
+
+  .loginBottomPara {
+    margin-top: 10px;
+    color: #555;
+  }
+
+  .loginBottomPara > span {
+    color: navy;
+  }
+
+  .loginBottomPara > span:hover {
+    color: lightblue;
+  }
   
   .input-container {
     position: relative;
@@ -37,7 +50,7 @@
   .input-container input {
     width: 100%;
     padding: 12px;
-    border: 1px solid #000; /* Change border color to black */
+    border: 1px solid #000;
     border-radius: 5px;
     outline: none;
     transition: border-color 0.3s ease;
@@ -48,14 +61,14 @@
   }
   
   .loginForm button {
-    background-color: #000; /* Change button color to black */
+    background-color: #000;
     color: white;
     padding: 14px;
-    border: 1px solid #000; /* Change border color to black */
+    border: 1px solid #000;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    width: 100%; /* Set button width to 100% */
+    width: 100%;
   }
   
   .loginForm button:hover {

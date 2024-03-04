@@ -1,16 +1,14 @@
 import { useState } from "react";
-import "./Explore.css";
+import './Request.css'
 import { FaAngleLeft } from "react-icons/fa6";
-import { addDays } from "date-fns";
 import { IoFilter } from "react-icons/io5";
-import { DateRangePicker } from "react-date-range";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { GoEye } from "react-icons/go";
+import PageHeader from "../Header/Header";
+import { DateRangePicker } from "react-date-range";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
-import { useNavigate } from "react-router-dom";
-import PageHeader from "../Header/Header";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const CustomButton = ({ onClick }) => {
   return (
@@ -32,16 +30,17 @@ const CustomButton = ({ onClick }) => {
   );
 };
 
-const Explore = () => {
+const Request = () => {
   const navigate = useNavigate();
-  const [hasNotification, setHasNotification] = useState(true);
+  const location = useLocation();
   const [state, setState] = useState([
     {
       startDate: new Date(),
-      endDate: addDays(new Date(), 7),
+      endDate: new Date(),
       key: "selection",
     },
   ]);
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleSelect = (ranges) => {
@@ -59,47 +58,46 @@ const Explore = () => {
   };
 
   const open = Boolean(anchorEl);
+  const {chatLink} = location.state;
 
   return (
-    <div className="explore-container p-0 sm:ml-60">
-      {/* Use the PageHeader component */}
+    <div className="dashboard-container p-0 sm:ml-60">
+      {/* Page Header */}
       <PageHeader
-        title="Explore"
+        title="Dashboard"
         searchQuery=""
         setSearchQuery={() => {}}
-        hasNotification={hasNotification}
-        setHasNotification={setHasNotification}
+        hasNotification={false} // Adjust as needed
+        setHasNotification={() => {}} // Adjust as needed
       />
 
       {/* Back Button */}
       <div className="back-button flex items-center text-2xl font-bold p-6">
-        <button
-          style={{ display: "flex", alignItems: "center" }}
-          onClick={() => navigate("/")}
-        >
+        <button style={{ display: "flex", alignItems: "center" }} onClick={() => navigate("/")}>
           <FaAngleLeft />
           <span className="ml-1">Back</span>
         </button>
       </div>
 
-      {/* Additional Divs below Eagle View */}
-      <div className="exploreContainer mx-5 bg-[#fff]">
-        <div className="exploreHeading text-2xl font-bold p-4">
-          <h2>Eagle View</h2>
+      {/* Additional Divs below Request Page */}
+      <div className="requestContainer mx-5 bg-[#fff]">
+      <div className="requestHeading text-2xl font-bold p-4">
+          <h2>Overview Request</h2>
         </div>
+        {/* Similar Channel Options from Explore Page */}
         <div className="channelOptions flex place-content-between pt-5 px-6">
           <div className="chatLinks flex">
             <h3 className="mr-2 channel-heads">Chat Links:</h3>{" "}
-            <p>https://t.me/+qCJbGLeN</p>
+            <p>{chatLink}</p>
           </div>
 
           <div className="AgencyOptions flex text-neutral-600">
             <h3 className="mr-2 channel-heads">Overview Request:</h3>
-            <span className="eye-icon">
-              {/* Disable the icon if there are no notifications */}
-              <GoEye />
+            <span className="requests-num font-bold">
+              5
             </span>
           </div>
+
           <div className="filterOptions flex">
             <div className="filterIcon channel-heads mr-2">
               <IoFilter />
@@ -132,50 +130,53 @@ const Explore = () => {
             </div>
           </div>
         </div>
-        <div className="channelResult px-5 pb-3">
-          <table className="channel-table">
+
+        {/* Table Layout */}
+        <div className="requestTable px-5 pb-3">
+          <table className="request-table">
             <thead>
-              <tr className="exploreChannels">
-                <th>Date</th>
-                <th>Total Members</th>
-                <th>Members Join</th>
-                <th>Members Left</th>
+              <tr className="requestColumns">
+                <th className="text-left">Date</th>
+                <th className="text-left">ID</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="channel-numbers">
+              <tr className="request-numbers">
                 <td>12/02/2024</td>
-                <td>1000</td>
-                <td>+100</td>
-                <td>-10</td>
+                <td>123456</td>
+                <td><button>Remove</button></td>
               </tr>
 
-              <tr className="channel-numbers">
+              <tr className="request-numbers">
                 <td>13/02/2024</td>
-                <td>1000</td>
-                <td>+100</td>
-                <td>-10</td>
+                <td>789012</td>
+                <td><button>Remove</button></td>
               </tr>
 
-              <tr className="channel-numbers">
+              {/* Add more rows as needed */}
+              <tr className="request-numbers">
                 <td>14/02/2024</td>
-                <td>1000</td>
-                <td>+100</td>
-                <td>-10</td>
+                <td>345678</td>
+                <td><button>Remove</button></td>
               </tr>
 
-              <tr className="channel-numbers">
+              <tr className="request-numbers">
                 <td>15/02/2024</td>
-                <td>1000</td>
-                <td>+100</td>
-                <td>-10</td>
+                <td>901234</td>
+                <td><button>Remove</button></td>
               </tr>
 
-              <tr className="channel-numbers">
+              <tr className="request-numbers">
                 <td>16/02/2024</td>
-                <td>1000</td>
-                <td>+100</td>
-                <td>-10</td>
+                <td>567890</td>
+                <td><button>Remove</button></td>
+              </tr>
+
+              <tr className="request-numbers">
+                <td>17/02/2024</td>
+                <td>234567</td>
+                <td><button>Remove</button></td>
               </tr>
             </tbody>
           </table>
@@ -185,4 +186,4 @@ const Explore = () => {
   );
 };
 
-export default Explore;
+export default Request;
