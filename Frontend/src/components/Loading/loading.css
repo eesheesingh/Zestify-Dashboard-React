@@ -1,0 +1,23 @@
+/* loading.css */
+.loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .lds-circle {
+    display: inline-block;
+    transform: translateZ(1px);
+  }
+  
+  .circle {
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    background: #1086e8;
+    background-size: 400% 400%;
+  }
+  

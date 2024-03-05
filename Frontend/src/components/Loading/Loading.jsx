@@ -1,35 +1,16 @@
-import "./Loading.scss"
+// loading.jsx
+import { motion } from 'framer-motion';
+import './loading.css';
 
 const Loading = () => {
   return (
-    <>
-      <div id="container">
-        <div className="divider" aria-hidden="true"></div>
-        <p className="loading-text" aria-label="Loading">
-          <span className="letter" aria-hidden="true">
-            L
-          </span>
-          <span className="letter" aria-hidden="true">
-            o
-          </span>
-          <span className="letter" aria-hidden="true">
-            a
-          </span>
-          <span className="letter" aria-hidden="true">
-            d
-          </span>
-          <span className="letter" aria-hidden="true">
-            i
-          </span>
-          <span className="letter" aria-hidden="true">
-            n
-          </span>
-          <span className="letter" aria-hidden="true">
-            g
-          </span>
-        </p>
+    <div className="loading-container">
+      <div className="lds-circle">
+        <motion.div className="circle" animate={{ rotateY: [0, 1800, 3600] }} transition={{ ease: 'easeInOut', duration: 2.4, loop: Infinity }}>
+          {/* You can also use variants for more complex animations */}
+        </motion.div>
       </div>
-    </>
+    </div>
   );
 };
 
