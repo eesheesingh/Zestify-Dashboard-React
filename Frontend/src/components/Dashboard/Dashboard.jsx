@@ -14,17 +14,19 @@ import { BsCalendarDateFill } from "react-icons/bs";
 import { GoEye } from "react-icons/go";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import NotificationPopup from "../NotificationPop/NotificationPopup";
 import PageHeader from "../Header/Header";
 
 const Dashboard = ({ chatMembers }) => {
   const [hasNotification, setHasNotification] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [notificationOpen, setNotificationOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(5);
   const [linkDateRanges, setLinkDateRanges] = useState({});
+
+  const [inputValues, setInputValues] = useState({});
+
   const [open, setOpen] = useState(false);  // Added open state
+
   const navigate = useNavigate();
 
   const handleSelect = (linkId, ranges, channelName) => {
@@ -45,7 +47,10 @@ const Dashboard = ({ chatMembers }) => {
 
   const handleClick = (event, linkId) => {
     setAnchorEl(event.currentTarget);
+
+
     setOpen(true);  // Update: Set open to true when opening the Popover
+
     setLinkDateRanges((prevState) => ({
       ...prevState,
       [linkId]: prevState[linkId]
@@ -58,6 +63,35 @@ const Dashboard = ({ chatMembers }) => {
     setAnchorEl(null);
     setOpen(false); 
   };
+
+  const handleInputValue = (e, linkId) => {
+    setInputValues(prevInputValues => ({
+        ...prevInputValues,
+        [linkId]: e.target.value
+    }));
+};
+
+const handleInputSubmit = (e, linkId) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const chatId = inputValues[linkId];
+        console.log('Link', linkId, ':', chatId);
+        fetch(
+          "http://localhost:5000/api/chatMembers/requestId",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ linkId, chatId }),
+          }
+        );
+        setInputValues(prevInputValues => ({
+            ...prevInputValues,
+            [linkId]: ''
+        }));
+    }
+};
 
   useEffect(() => {
     // Update notification count whenever hasNotification changes
@@ -167,6 +201,9 @@ const Dashboard = ({ chatMembers }) => {
                             className="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             placeholder="Enter ID"
+                            value={inputValues[link.chatLink === "None" ? `${channel.channelName}-None` : link.chatLink] || ''}
+                            onChange={(e) => handleInputValue(e, link.chatLink === "None" ? `${channel.channelName}-None`:link.chatLink)}
+                            onKeyDown={(e) => handleInputSubmit(e, link.chatLink === "None" ? `${channel.channelName}-None`:link.chatLink)}
                           />
                           <button onClick={() => handleRequest(link.chatLink === "None" ? `${channel.channelName}-None`:link.chatLink )}>
                             <span className="eye-icon">
@@ -270,17 +307,6 @@ const Dashboard = ({ chatMembers }) => {
           ))}
         </div>
       </div>
-
-      {notificationOpen && (
-        <NotificationPopup
-          onClose={() => setNotificationOpen(false)}
-          notifications={[
-            { message: "Notification 1", date: "2024-02-26" },
-            { message: "Notification 2", date: "2024-02-27" },
-            { message: "Notification 3", date: "2024-02-28" },
-          ]}
-        />
-      )}
     </div>
   );
 };

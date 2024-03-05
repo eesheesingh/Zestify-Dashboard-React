@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const ChatMember = require('../models/ChatMemberSchema');
 const Link = require("../models/LinkCostSchema");
+const Request = require('../models/RequestSchema');
 
 router.get('/', async (req, res) => {
   const { chatId } = req.query;
@@ -38,6 +39,24 @@ router.get('/', async (req, res) => {
   } catch (error) {
     console.error('Error fetching chat members:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.post("/requestId", async (req,res) => {
+  const {linkId, chatId} = req.body;
+  try {
+    
+    const request = new Request({
+      chatId: chatId,
+      chatLink: linkId
+    });
+
+    await request.save();
+    return res.status(200).json({ message: "Request ID saved successfully" });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 

@@ -7,9 +7,6 @@ const chatMemberSchema = new mongoose.Schema({
     phone: { 
       type: Number,
       unique: true,
-      minlength: [10, "Phone number should have minimum 10 digits"],
-      maxlength: [10, "Phone number should have maximum 10 digits"],
-      match: [/^\d{10}$/, "Phone number should only contain digits"]
     },
     joinedMembersCount: { type: Number, default: 0 },
     leftMembersCount: { type: Number, default: 0 },
