@@ -8,6 +8,8 @@ import Loading from "../Loading/Loading";
 import LoadingBar from "react-top-loading-bar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
+
 
 const Login = ({ setChatMembers }) => {
   const [inputValue, setInputValue] = useState("");
@@ -82,7 +84,12 @@ const Login = ({ setChatMembers }) => {
   }
 
   return (
-    <div className="login-container">
+    <motion.div
+      className="login-container"
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.5 }}
+    >
       <div className="login-box">
         <h2 className="loginHeading font-bold">Login</h2>
         <p className="loginPara">
@@ -97,8 +104,6 @@ const Login = ({ setChatMembers }) => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 required
-                pattern="[6-9]{1}[0-9]{9}"
-                title="Please enter valid phone number"
               />
             </div>
             <button type="submit">Continue</button>
@@ -106,11 +111,11 @@ const Login = ({ setChatMembers }) => {
           <LoadingBar color="red" ref={ref} />
         </div>
         <p className="loginBottomPara">
-          <a href="/signup">Haven&apos;t Signed-Up yet? Click here</a>
+          Haven&apos;t Signed-Up yet?<a href="/signup"> Click here</a>
         </p>
         <ToastContainer />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,76 +1,82 @@
 /* Login.css */
 
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: url('image\ 4.png') center/cover no-repeat;
-    text-align: center;
-  }
-  
-  .login-box {
-    max-width: 400px;
-    width: 100%;
-    padding: 30px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
-    border-radius: 10px;
-  }
-  
-  .loginHeading {
-    margin-bottom: 20px;
-    color: #333;
-    font-size: 24px;
-  }
-  
-  .loginPara {
-    margin-bottom: 30px;
-    color: #555;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url('image\ 4.png') center/cover no-repeat;
+  text-align: center;
+}
 
-  .loginBottomPara {
-    margin-top: 10px;
-    color: #555;
-  }
+.login-box {
+  max-width: 400px;
+  width: 100%;
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 10px;
+}
 
-  .loginBottomPara > a {
-    color: navy;
-  }
+.loginHeading {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 24px;
+}
 
-  .loginBottomPara > a:hover {
-    color: lightblue;
-  }
+.loginPara {
+  margin-bottom: 30px;
+  color: #555;
+}
 
-  .input-container {
-    position: relative;
-    margin-bottom: 20px;
-  }
-  
-  .input-container input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #000;
-    border-radius: 5px;
-    outline: none;
-    transition: border-color 0.3s ease;
-  }
-  
-  .input-container input:focus {
-    border-color: #2561ed;
-  }
-  
-  .loginForm button {
-    background-color: #000;
-    color: white;
-    padding: 14px;
-    border: 1px solid #000;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 100%;
-  }
-  
-  .loginForm button:hover {
-    background-color: #2561ed;
-  }
+.loginBottomPara {
+  margin-top: 10px;
+  color: #555;
+}
+
+.loginBottomPara > a {
+  color: #2561ed;
+  text-decoration: none; /* Remove underline */
+  transition: color 0.3s ease;
+}
+
+.loginBottomPara > p{
+  color: #000;
+}
+
+.loginBottomPara > a:hover {
+  color: #14337b;
+}
+
+.input-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input-container input:focus {
+  border-color: #2561ed;
+}
+
+.loginForm button {
+  background-color: #000;
+  color: white;
+  padding: 14px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.loginForm button:hover {
+  background-color: #2561ed;
+}

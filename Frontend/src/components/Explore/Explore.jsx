@@ -111,7 +111,7 @@ const Explore = ({ chatMembers }) => {
 
   return (
     <div className="explore-container p-0 sm:ml-60">
-      <div className="explore-header grid grid-cols-3 gap-4 p-4 bg-fff">
+       <div className="explore-header grid grid-cols-3 gap-4 p-4 bg-fff">
         <div className="col-span-1 flex items-center">
           <h1 className="text-2xl font-bold text-gray-800">Explore</h1>
         </div>
