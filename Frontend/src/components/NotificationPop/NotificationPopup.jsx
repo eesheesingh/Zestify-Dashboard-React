@@ -1,7 +1,8 @@
 // NotificationPopup.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes } from "react-icons/fa";
-import './NotificationPopup.css'
+import "./NotificationPopup.css";
 
 const notificationsData = [
   "Notification 1 content.",
@@ -12,34 +13,54 @@ const notificationsData = [
 const NotificationPopup = ({ onClose }) => {
   const [notifications, setNotifications] = useState(notificationsData);
 
-  const handleClickOutside = (e) => {
-    if (e.target.classList.contains("notification-popup")) {
+  const handleScroll = () => {
+    if (window.scrollY > 50) {
+      // Close the notification when scrolled down
       onClose();
     }
   };
 
-  const handleNotificationClose = (index) => {
-    const updatedNotifications = [...notifications];
-    updatedNotifications.splice(index, 1);
-    setNotifications(updatedNotifications);
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [onClose]);
+
+  const handleNotificationClose = () => {
+    // Close the notification with an animation
+    setNotifications([]);
+    setTimeout(() => onClose(), 300); // Adjust the timeout based on your animation duration
   };
 
   return (
-    <div className="notification-popup" onClick={handleClickOutside}>
-      <div className="close-icon" onClick={onClose}>
-        <FaTimes />
-      </div>
-      <div className="notifications-container">
-        {notifications.map((notification, index) => (
-          <div key={index} className="notification">
-            <p>{notification}</p>
-            <div className="close-icon" onClick={() => handleNotificationClose(index)}>
-              <FaTimes />
-            </div>
+    <AnimatePresence>
+      {notifications.length > 0 && (
+        <motion.div
+          className="notification-popup"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+        >
+          <div className="close-icon" onClick={handleNotificationClose}>
+            <FaTimes />
           </div>
-        ))}
-      </div>
-    </div>
+          <div className="notifications-container">
+            {notifications.map((notification, index) => (
+              <motion.div
+                key={index}
+                className="notification"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                <p>{notification}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

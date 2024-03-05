@@ -1,11 +1,30 @@
 // ProfileSidebar.jsx
-import { useState } from "react";
-import { FaTimes } from 'react-icons/fa';
-import "./ProfileSidebar.css"; // Import your Tailwind CSS file
+import { useState, useEffect } from "react";
+import { FaTimes, FaCamera } from "react-icons/fa";
+import { MdLock } from "react-icons/md";
+import { motion } from "framer-motion";
+import "./ProfileSidebar.css";
 
 const ProfileSidebar = ({ onClose, setProfilePicture }) => {
   const [profilePicture, setLocalProfilePicture] = useState(null);
   const [isActive, setIsActive] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedName, setEditedName] = useState("john_doe"); // Initial username
+  const [editedEmail, setEditedEmail] = useState("user@example.com"); // Initial email
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === "Enter") {
+        setIsEditing(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
   const handlePictureChange = (e) => {
     const file = e.target.files[0];
@@ -13,55 +32,123 @@ const ProfileSidebar = ({ onClose, setProfilePicture }) => {
     setProfilePicture(file);
   };
 
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleNameChange = (e) => {
+    setEditedName(e.target.value);
+  };
+
+  const handleEmailChange = (e) => {
+    setEditedEmail(e.target.value);
+  };
+
   const chatId = "12345";
-  const email = "user@example.com";
   const phoneNumber = "123-456-7890";
-  const username = "john_doe";
 
   return (
-    <div className={`profile-sidebar ${isActive ? "active" : ""} bg-white p-4 fixed top-0 right-0 h-full w-64 shadow-md z-50 transition-transform duration-300 ease-in-out transform`}>
+    <motion.div
+      className={`profile-sidebar ${isActive ? "active" : ""}`}
+      initial={{ opacity: 0, x: 300 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 300 }}
+    >
+      <div className="profile-heading">
+        <h1>Your Profile</h1>
+      </div>
+
       <div className="profile-picture-container mb-4">
-        <h1 className="Profile-heading">Your Profile</h1>
-        <label htmlFor="profile-picture-input" className="profile-picture-label relative cursor-pointer">
+        <label htmlFor="profile-picture-input" className="profile-picture-label">
           <img
             src={profilePicture ? URL.createObjectURL(profilePicture) : "default-profile-image.jpg"}
             alt="Profile"
-            className="profile-picture rounded-full w-full h-auto transition-transform duration-300 ease-in-out transform hover:scale-105"
+            className="profile-picture"
           />
-          <div className="overlay absolute top-0 left-0 w-full h-full bg-opacity-60 bg-black flex justify-center items-center opacity-0 transition-opacity duration-300 ease-in-out rounded-full">
-            <div className="upload-icon text-white text-xl cursor-pointer">
-              <i className="fas fa-camera"></i>
-            </div>
+          <div className="overlay">
+            <FaCamera className="upload-icon" />
             <input
               id="profile-picture-input"
               type="file"
               accept="image/*"
               onChange={handlePictureChange}
-              className="hidden-input absolute w-full h-full opacity-0 cursor-pointer"
+              className="hidden-input"
             />
           </div>
         </label>
       </div>
 
-      <div className="user-info text-center mb-4">
-        <p className="mb-2">
-          <strong>Chat ID:</strong> {chatId}
-        </p>
+      <div className="user-info mb-4">
         <p>
-          <strong>Username:</strong> {username}
+          <strong>
+             Chat ID:
+          </strong>{" "}
+          {chatId}
+          <MdLock />
         </p>
-        <p className="mb-2">
-          <strong>Email:</strong> {email}
+        <motion.div
+          className="editable-info"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <p>
+            <strong>
+              Username:{" "}
+              {isEditing ? (
+                <>
+                  <input
+                    type="text"
+                    value={editedName}
+                    onChange={handleNameChange}
+                    className="editable-input"
+                    placeholder="Enter your username"
+                  />
+                </>
+              ) : (
+                <>
+                  {editedName}
+                </>
+              )}
+            </strong>
+          </p>
+          <p>
+            <strong>
+              Email:{" "}
+              {isEditing ? (
+                <>
+                  <input
+                    type="text"
+                    value={editedEmail}
+                    onChange={handleEmailChange}
+                    className="editable-input"
+                    placeholder="Enter your email"
+                  />
+                </>
+              ) : (
+                <>
+                  {editedEmail}
+                </>
+              )}
+            </strong>
+          </p>
+        </motion.div>
+        <p>
+          <strong>
+            Phone Number:
+          </strong>{" "}
+          {phoneNumber}
+          <MdLock /> 
         </p>
-        <p className="mb-2">
-          <strong>Phone Number:</strong> {phoneNumber}
-        </p>
+        <button className="edit-button" onClick={handleEditToggle}>
+          {isEditing ? "Save" : "Edit"}
+        </button>
       </div>
 
-      <div className="close-icon absolute top-4 right-4 cursor-pointer" onClick={onClose}>
-        <FaTimes className="text-red-500 text-2xl hover:text-red-600" />
+      <div className="close-icon" onClick={onClose}>
+        <FaTimes />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -2,15 +2,27 @@
 import { useState } from "react";
 import { UilSearch } from "@iconscout/react-unicons";
 import { LuBell } from "react-icons/lu";
+import { motion } from "framer-motion";
 import profileImage from "../../assets/an-avatar-of-a-brown-guy-looking-at-you-with-cute-smiles-with-transparent-background-hes-wearing-a-627855248.png";
 import PropTypes from "prop-types";
 import ProfileSidebar from "../Profile/ProfileSidebar";
+import NotificationPopup from "../NotificationPop/NotificationPopup";
 
-const PageHeader = ({ title, searchQuery, setSearchQuery, hasNotification, setHasNotification }) => {
+const PageHeader = ({ title, searchQuery, setSearchQuery }) => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [isProfileSidebarOpen, setProfileSidebarOpen] = useState(false);
+  const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+
+  // Simplified notification click handling
+  const handleNotificationClick = () => {
+    setShowNotificationPopup(true);
+  };
+
   return (
-    <div className="dashboard-header grid grid-cols-3 gap-4 mb-4">
+    <motion.div  className="dashboard-header grid grid-cols-3 gap-4 mb-4"
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -20 }}>
       {/* Left: Dashboard Heading */}
       <div className="col-span-1 flex items-center">
         <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
@@ -32,30 +44,37 @@ const PageHeader = ({ title, searchQuery, setSearchQuery, hasNotification, setHa
         </span>
       </div>
 
-     {/* Right: Bell Icon and Circular Profile Image */}
-     <div className="col-span-1 flex items-center justify-end space-x-4">
+      {/* Right: Bell Icon and Circular Profile Image */}
+      <div className="col-span-1 flex items-center justify-end space-x-4">
         <div className="relative text-gray-800">
           {/* Bell Icon with notification dot */}
           <button
             className="focus:outline-none"
-            onClick={() => setHasNotification(!hasNotification)}
+            onClick={handleNotificationClick}
           >
             <div
-              className={`text-2xl bell-icon ${
-                hasNotification ? "has-notification" : ""
-              }`}
+              className={`text-2xl bell-icon has-notification`}
+              title="Notification"
             >
               <LuBell className="bell" />
             </div>
-            {hasNotification && <div className="notification-dot"></div>}
           </button>
+          {showNotificationPopup && (
+            <NotificationPopup
+              onClose={() => setShowNotificationPopup(false)}
+            />
+          )}
         </div>
 
         <div className="profile-image-container">
           {/* Circular Profile Image with onClick to open the sidebar */}
-          <button onClick={() => setProfileSidebarOpen(true)}>
+          <button title="Profile" onClick={() => setProfileSidebarOpen(true)}>
             <img
-              src={profilePicture ? URL.createObjectURL(profilePicture) : profileImage}
+              src={
+                profilePicture
+                  ? URL.createObjectURL(profilePicture)
+                  : profileImage
+              }
               alt="Profile"
               className="profile-image"
             />
@@ -70,16 +89,14 @@ const PageHeader = ({ title, searchQuery, setSearchQuery, hasNotification, setHa
           setProfilePicture={setProfilePicture}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
-
 
 PageHeader.propTypes = {
   title: PropTypes.string.isRequired,
   searchQuery: PropTypes.string.isRequired,
   setSearchQuery: PropTypes.func.isRequired,
-  hasNotification: PropTypes.bool.isRequired,
   setHasNotification: PropTypes.func.isRequired,
 };
 
