@@ -89,7 +89,6 @@ const Overview = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Example data, replace it with your actual data */}
               <tr className="overview-numbers">
                 <td>Channel 1</td>
                 <td>https://t.me/channel1</td>

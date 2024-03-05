@@ -1,5 +1,5 @@
-import { useState } from "react";
-import './Request.css'
+import { useEffect, useState } from "react";
+import "./Request.css";
 import { FaAngleLeft } from "react-icons/fa6";
 import { IoFilter } from "react-icons/io5";
 import { BsCalendarDateFill } from "react-icons/bs";
@@ -33,6 +33,7 @@ const CustomButton = ({ onClick }) => {
 const Request = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [requests, setRequests] = useState([]);
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -57,8 +58,62 @@ const Request = () => {
     setAnchorEl(null);
   };
 
+  const handleRemove = async (requestId, chatId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/chatMembers/removeChatId`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ requestId, chatId })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to remove chatId');
+      }
+      fetchData();
+    } catch (error) {
+      console.error('Failed to remove chatId:', error);
+    }
+  };
+
   const open = Boolean(anchorEl);
-  const {chatLink} = location.state;
+  const { chatLink } = location.state;
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/chatMembers/requests?chatLink=${encodeURIComponent(
+          chatLink
+        )}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setRequests(data);
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (chatLink) {
+      fetchData();
+    }
+  }, []);
+
+  function formatDate(date) {
+    let d = new Date(date),
+      day = "" + d.getDate(),
+      month = "" + (d.getMonth() + 1), // Month is 0-indexed
+      year = d.getFullYear();
+
+    if (day.length < 2) day = "0" + day;
+    if (month.length < 2) month = "0" + month;
+
+    return [day, month, year].join("/");
+  }
 
   return (
     <div className="dashboard-container p-0 sm:ml-60">
@@ -73,7 +128,10 @@ const Request = () => {
 
       {/* Back Button */}
       <div className="back-button flex items-center text-2xl font-bold p-6">
-        <button style={{ display: "flex", alignItems: "center" }} onClick={() => navigate("/")}>
+        <button
+          style={{ display: "flex", alignItems: "center" }}
+          onClick={() => navigate("/")}
+        >
           <FaAngleLeft />
           <span className="ml-1">Back</span>
         </button>
@@ -81,7 +139,7 @@ const Request = () => {
 
       {/* Additional Divs below Request Page */}
       <div className="requestContainer mx-5 bg-[#fff]">
-      <div className="requestHeading text-2xl font-bold p-4">
+        <div className="requestHeading text-2xl font-bold p-4">
           <h2>Overview Request</h2>
         </div>
         {/* Similar Channel Options from Explore Page */}
@@ -93,9 +151,9 @@ const Request = () => {
 
           <div className="AgencyOptions flex text-neutral-600">
             <h3 className="mr-2 channel-heads">Overview Request:</h3>
-            <span className="requests-num font-bold">
-              5
-            </span>
+            {requests.map((request, index) => (
+            <span key={index} className="requests-num font-bold">{request.chatIds.length || 0}</span>
+            ))}
           </div>
 
           <div className="filterOptions flex">
@@ -142,42 +200,17 @@ const Request = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="request-numbers">
-                <td>12/02/2024</td>
-                <td>123456</td>
-                <td><button>Remove</button></td>
-              </tr>
-
-              <tr className="request-numbers">
-                <td>13/02/2024</td>
-                <td>789012</td>
-                <td><button>Remove</button></td>
-              </tr>
-
-              {/* Add more rows as needed */}
-              <tr className="request-numbers">
-                <td>14/02/2024</td>
-                <td>345678</td>
-                <td><button>Remove</button></td>
-              </tr>
-
-              <tr className="request-numbers">
-                <td>15/02/2024</td>
-                <td>901234</td>
-                <td><button>Remove</button></td>
-              </tr>
-
-              <tr className="request-numbers">
-                <td>16/02/2024</td>
-                <td>567890</td>
-                <td><button>Remove</button></td>
-              </tr>
-
-              <tr className="request-numbers">
-                <td>17/02/2024</td>
-                <td>234567</td>
-                <td><button>Remove</button></td>
-              </tr>
+              {requests.map((request, index) =>
+                request.chatIds.map((chat, chatIndex) => (
+                  <tr className="request-numbers" key={`${index}-${chatIndex}`}>
+                    <td>{formatDate(chat.createdAt)}</td>
+                    <td>{chat.chatId}</td>
+                    <td>
+                      <button onClick={() => handleRemove(request._id, chat.chatId)}>Remove</button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

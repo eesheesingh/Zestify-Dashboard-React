@@ -42,21 +42,60 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post("/requestId", async (req,res) => {
-  const {linkId, chatId} = req.body;
+router.post("/requestId", async (req, res) => {
+  const { linkId, chatId } = req.body;
   try {
+    const existingRequest = await Request.findOne({ chatLink: linkId, "chatIds.chatId": chatId });
+    if (existingRequest) {
+      return res.status(400).json({ message: "Chat ID already exists for this link" });
+    }
+
+    const filter = { chatLink: linkId };
+    const update = {
+      $addToSet: { chatIds: { chatId: chatId } },
+      $setOnInsert: { createdAt: new Date() }
+    };
+    const options = { upsert: true, new: true };
     
-    const request = new Request({
-      chatId: chatId,
-      chatLink: linkId
-    });
-
-    await request.save();
-    return res.status(200).json({ message: "Request ID saved successfully" });
-
+    const request = await Request.findOneAndUpdate(filter, update, options);
+    
+    if (request === null) {
+      return res.status(200).json({ message: "Request ID saved successfully" });
+    } else {
+      return res.status(200).json({ message: "Request ID updated successfully" });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.delete("/removeChatId", async (req, res) => {
+  const { requestId, chatId } = req.body;
+  try {
+    const request = await Request.findById(requestId);
+    if (!request) {
+      return res.status(404).json({ message: "Request not found" });
+    }
+
+    request.chatIds = request.chatIds.filter((chat) => chat.chatId !== chatId);
+    await request.save();
+
+    return res.status(200).json({ message: "ChatId removed successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.get('/requests', async (req, res) => {
+  const { chatLink } = req.query;
+  try {
+    const requests = await Request.find({ chatLink: chatLink });
+    res.json(requests);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
