@@ -24,6 +24,7 @@ const Dashboard = ({ chatMembers }) => {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(5);
   const [linkDateRanges, setLinkDateRanges] = useState({});
+  const [open, setOpen] = useState(false);  // Added open state
   const navigate = useNavigate();
 
   const handleSelect = (linkId, ranges, channelName) => {
@@ -44,7 +45,7 @@ const Dashboard = ({ chatMembers }) => {
 
   const handleClick = (event, linkId) => {
     setAnchorEl(event.currentTarget);
-    // Update the linkId in the state
+    setOpen(true);  // Update: Set open to true when opening the Popover
     setLinkDateRanges((prevState) => ({
       ...prevState,
       [linkId]: prevState[linkId]
@@ -55,6 +56,7 @@ const Dashboard = ({ chatMembers }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setOpen(false); 
   };
 
   useEffect(() => {
