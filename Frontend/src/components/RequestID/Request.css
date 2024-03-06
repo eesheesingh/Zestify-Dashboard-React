@@ -163,3 +163,66 @@
     color: #F10000;
     font-weight: 600;
 }
+
+
+@media (max-width: 768px) {
+    .request-container {
+      padding: 0;
+    }
+  
+    .dashboard-container {
+      padding-left: 0;
+    }
+  
+    .request-heading {
+      font-size: 1.5rem;
+    }
+  
+    .channelOptions {
+      flex-direction: column;
+      padding-top: 10px;
+    }
+  
+    .chatLinks h3,
+    .AgencyOptions h3 {
+      margin-bottom: 4px;
+    }
+
+    .date-range,
+  .filterOptions {
+    align-items: flex-start;
+  }
+
+
+  .date-range button,
+  .date-rangePicker {
+    margin-right: 10px;
+  }
+    .filterOptions {
+      flex-direction: row;
+    }
+  
+    .filterIcon {
+      margin-right: 0;
+      margin-bottom: 5px;
+      margin-top: 5px;
+    }
+  
+    .date-range {
+      margin-bottom: 5px;
+      margin-right: 5px;
+    }
+  
+    .requestTable {
+      overflow-x: auto;
+    }
+  
+    /* Responsive styles for table */
+    .request-numbers td {
+      font-size: 0.9rem;
+    }
+  
+    .request-numbers th {
+      font-size: 0.9rem;
+    }
+  }

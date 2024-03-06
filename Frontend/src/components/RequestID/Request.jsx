@@ -23,7 +23,7 @@ const CustomButton = ({ onClick }) => {
     >
       <BsCalendarDateFill />
       <span style={{ marginLeft: "0.5rem", textTransform: "none" }}>
-        Date Range
+        Date <span className="range-text">Range</span> 
       </span>
       <MdKeyboardArrowDown />
     </Button>
