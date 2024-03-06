@@ -1,16 +1,16 @@
 // routes/chatMembers.js
 
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const ChatMember = require('../models/ChatMemberSchema');
+const ChatMember = require("../models/ChatMemberSchema");
 const Link = require("../models/LinkCostSchema");
-const Request = require('../models/RequestSchema');
+const Request = require("../models/RequestSchema");
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   const { chatId } = req.query;
 
   if (!chatId) {
-    return res.status(400).json({ error: 'ChatId is required!' });
+    return res.status(400).json({ error: "ChatId is required!" });
   }
 
   try {
@@ -19,51 +19,113 @@ router.get('/', async (req, res) => {
     if (chatId === "123456789") {
       chatMembers = await ChatMember.find();
     } else if (chatId === "uday01") {
-        chatMembers = await ChatMember.find({ 
-          chatId: {$in: ["-1001622855977", "-1001354366085", "-1001104856892", "-1001157694476"]}
+      chatMembers = await ChatMember.find({
+        chatId: {
+          $in: [
+            "-1001622855977",
+            "-1001354366085",
+            "-1001104856892",
+            "-1001157694476",
+          ],
+        },
       });
     } else {
       chatMembers = await ChatMember.find({
-        $or: [
-          { chatId: chatId },
-          { phone: chatId }
-        ]
+        $or: [{ chatId: chatId }, { phone: chatId }],
       });
-    } 
+    }
 
     if (!chatMembers || chatMembers.length === 0) {
-      return res.status(404).json({ error: 'Chat members not found!' });
+      return res.status(404).json({ error: "Chat members not found!" });
     }
 
     res.json(chatMembers);
   } catch (error) {
-    console.error('Error fetching chat members:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error fetching chat members:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get("/overview", async (req, res) => {
+  const { sessionChatId } = req.query;
+  try {
+    const request = await Request.find({ "chatIds.chatId": sessionChatId });
+    if (request.length === 0) {
+      return res.status(404).send("No Data available for this user");
+    }
+    const chatLinks = request.map((request) => request.chatLink);
+
+    const chatMembers = await ChatMember.aggregate([
+      { $unwind: "$members" },
+      { $match: { "members.chatLink": { $in: chatLinks } } },
+      {
+        $group: {
+          _id: "$channelName",
+          channelName: { $first: "$channelName" },
+          chatMembers: {
+            $push: {
+              chatLink: "$members.chatLink",
+              joinedAt: {
+                $cond: [
+                  { $eq: ["$members.chatLink", "$members.chatLink"] },
+                  "$members.joinedAt",
+                  null
+                ]
+              },
+              leftAt: {
+                $cond: [
+                  { $eq: ["$members.chatLink", "$members.chatLink"] },
+                  "$members.leftAt",
+                  null
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]);    
+
+    if (chatMembers.length === 0) {
+      return res
+        .status(404)
+        .json({
+          message: "No chat member data found for the associated chatLinks",
+        });
+    }
+
+    res.json(chatMembers);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
 router.post("/requestId", async (req, res) => {
   const { linkId, chatId } = req.body;
   try {
-    const existingRequest = await Request.findOne({ chatLink: linkId, "chatIds.chatId": chatId });
+    const user = await ChatMember.findOne({ chatId });
+
+    if (!user) {
+      return res.status(404).json({ message: "ChatID does not exist" });
+    }
+    const existingRequest = await Request.findOne({
+      chatLink: linkId,
+      "chatIds.chatId": chatId,
+    });
     if (existingRequest) {
-      return res.status(400).json({ message: "Chat ID already exists for this link" });
+      return res
+        .status(400)
+        .json({ message: "Chat ID already exists for this link" });
     }
 
     const filter = { chatLink: linkId };
     const update = {
       $addToSet: { chatIds: { chatId: chatId } },
-      $setOnInsert: { createdAt: new Date() }
+      $setOnInsert: { createdAt: new Date() },
     };
     const options = { upsert: true, new: true };
-    
-    const request = await Request.findOneAndUpdate(filter, update, options);
-    
-    if (request === null) {
-      return res.status(200).json({ message: "Request ID saved successfully" });
-    } else {
-      return res.status(200).json({ message: "Request ID updated successfully" });
-    }
+    await Request.findOneAndUpdate(filter, update, options);
+    return res.status(200).json({ message: "Request ID saved successfully" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -88,7 +150,7 @@ router.delete("/removeChatId", async (req, res) => {
   }
 });
 
-router.get('/requests', async (req, res) => {
+router.get("/requests", async (req, res) => {
   const { chatLink } = req.query;
   try {
     const requests = await Request.find({ chatLink: chatLink });
@@ -104,7 +166,9 @@ router.post("/phone", async (req, res) => {
     const { chatId, phone } = req.body;
 
     if (!chatId || !phone) {
-      return res.status(400).json({ error: 'Chat ID and Phone Number are required' });
+      return res
+        .status(400)
+        .json({ error: "Chat ID and Phone Number are required" });
     }
 
     const chatMember = await ChatMember.findOne({ chatId });
@@ -114,14 +178,17 @@ router.post("/phone", async (req, res) => {
     }
 
     if (chatMember.phone) {
-      return res.status(400).json({ message: "Phone number already exists for this Chat ID" });
+      return res
+        .status(400)
+        .json({ message: "Phone number already exists for this Chat ID" });
     }
 
     chatMember.phone = phone;
     await chatMember.save();
-    
-    return res.status(200).json({ message: "Phone number saved successfully", chatMember });
-    
+
+    return res
+      .status(200)
+      .json({ message: "Phone number saved successfully", chatMember });
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {
@@ -151,10 +218,19 @@ router.post("/saveAdCost", async (req, res) => {
       }
 
       await link.save();
-      res.status(200).json({ message: `Ad cost saved successfully for ${chatLink}` });
+      res
+        .status(200)
+        .json({ message: `Ad cost saved successfully for ${chatLink}` });
     } else {
-      link = await Link.create({ chatLink, adCost: [{ adCost, date: dateObject }] });
-      res.status(200).json({ message: `New chat link and ad cost saved successfully for ${chatLink}` });
+      link = await Link.create({
+        chatLink,
+        adCost: [{ adCost, date: dateObject }],
+      });
+      res
+        .status(200)
+        .json({
+          message: `New chat link and ad cost saved successfully for ${chatLink}`,
+        });
     }
   } catch (error) {
     console.error(error);
@@ -162,12 +238,12 @@ router.post("/saveAdCost", async (req, res) => {
   }
 });
 
-router.get("/getAdCost", async (req,res) => {
+router.get("/getAdCost", async (req, res) => {
   try {
     const adCost = await Link.find();
     res.json(adCost);
   } catch (error) {
-    res.status(500).json({message: "Unable to fetch data"})
+    res.status(500).json({ message: "Unable to fetch data" });
   }
 });
 

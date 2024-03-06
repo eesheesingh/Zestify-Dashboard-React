@@ -15,6 +15,9 @@
     border-top-right-radius: 10px;
   }
 
+  tbody li {
+    margin-bottom: 1rem;
+  }
   
   .overview-table {
     width: 100%;

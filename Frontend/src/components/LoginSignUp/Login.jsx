@@ -66,7 +66,7 @@ const Login = ({ setChatMembers }) => {
         throw new Error(handleError("Chat ID is required!"));
       }
       if (!response.ok) {
-        throw new Error(handleError("User not Found!"));
+        throw new Error(handleError("ChatID is not Found!"));
       }
 
       const data = await response.json();
