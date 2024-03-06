@@ -1,4 +1,3 @@
-/* loading.css */
 .loading-container {
     display: flex;
     align-items: center;
@@ -9,6 +8,10 @@
   .lds-circle {
     display: inline-block;
     transform: translateZ(1px);
+    -webkit-transform: translateZ(1px);
+    -moz-transform: translateZ(1px);
+    -ms-transform: translateZ(1px);
+    -o-transform: translateZ(1px);
   }
   
   .circle {
@@ -20,4 +23,3 @@
     background: #1086e8;
     background-size: 400% 400%;
   }
-  

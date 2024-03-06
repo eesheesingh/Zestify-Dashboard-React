@@ -1,5 +1,6 @@
 // PageHeader.jsx
 import { useState } from "react";
+import './Header.css'
 import { UilSearch } from "@iconscout/react-unicons";
 import { LuBell } from "react-icons/lu";
 import { motion } from "framer-motion";

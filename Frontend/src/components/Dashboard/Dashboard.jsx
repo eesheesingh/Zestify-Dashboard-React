@@ -165,7 +165,7 @@ const handleInputSubmit = (e, linkId) => {
 
         <div className="dashboard-view-section mb-4">
           {getChannelsDetailsByDateRange().map((channel, index) => (
-            <div className="my-8" key={index}>
+            <div className="my-8 table-list-mb" key={index}>
               <div key={index} className="channel-heading">
                 <h3 className="text-xl font-semibold">{channel.channelName}</h3>
               </div>
@@ -222,7 +222,7 @@ const handleInputSubmit = (e, linkId) => {
                       <td>-{link.leftMemberCount}</td>
                       <td>
                         <div style={{ height: "2rem" }} className="mt-2">
-                          <Button
+                          <Button className="date-button"
                             onClick={(event) =>
                               handleClick(
                                 event,
@@ -236,18 +236,19 @@ const handleInputSubmit = (e, linkId) => {
                               color: "#4a5568",
                               border: "1px solid #4a5568",
                               borderRadius: "8px",
+                              paddingRight: "0.8rem",
                             }}
                           >
-                            <BsCalendarDateFill />
+                            <BsCalendarDateFill className="date-icons" />
                             <span
                               style={{
                                 marginLeft: "0.5rem",
                                 textTransform: "none",
                               }}
                             >
-                              Date Range
+                              Date <span className="range-text">Range</span>
                             </span>
-                            <MdKeyboardArrowDown />
+                            <MdKeyboardArrowDown className="date-icons" />
                           </Button>
                           <Popover
                             key={

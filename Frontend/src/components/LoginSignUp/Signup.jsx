@@ -1,55 +1,64 @@
+// Signup.js
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Signup.css";
 import LoadingBar from "react-top-loading-bar";
+import { motion } from "framer-motion"; // Import motion from framer-motion
 
 const Signup = () => {
-    const [chatId, setChatId] = useState('')
-    const [phone, setPhone] = useState('')
-    const navigate = useNavigate();
-    const ref = useRef(null);
+  const [chatId, setChatId] = useState("");
+  const [phone, setPhone] = useState("");
+  const navigate = useNavigate();
+  const ref = useRef(null);
 
-    const handleError = (err) =>
+  const handleError = (err) =>
     toast.info(err, {
       position: "bottom-left",
     });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        if (phone.length < 10 || phone.length > 10) {
-          throw new Error(handleError('Phone number must be exactly 10 digits long.'));
-        }
+    if (phone.length < 10 || phone.length > 10) {
+      throw new Error(
+        handleError("Phone number must be exactly 10 digits long.")
+      );
+    }
 
-        try {
-            ref.current.continuousStart();
-            if (!phone) {
-                throw new Error(handleError("Phone Number is required!"));
-              }
-          const response = await fetch(
-            "http://localhost:5000/api/chatMembers/phone",
-            {
-                headers: {'Content-Type': 'application/json'},
-                method: "POST",
-                body: JSON.stringify({chatId, phone}),
-            }
-          );
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(handleError(data.message));
-          }
-          navigate("/login", {state: {phone: phone}});
-        } catch (error) {
-          console.log(error.message)
-        } finally {
-          ref.current.complete();
+    try {
+      ref.current.continuousStart();
+      if (!phone) {
+        throw new Error(handleError("Phone Number is required!"));
+      }
+      const response = await fetch(
+        "http://localhost:5000/api/chatMembers/phone",
+        {
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
+          body: JSON.stringify({ chatId, phone }),
         }
-      };
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(handleError(data.message));
+      }
+      navigate("/login", { state: { phone: phone } });
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      ref.current.complete();
+    }
+  };
 
   return (
-    <div className="login-container">
+    <motion.div
+      className="login-container"
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.5 }}
+    >
       <div className="login-box">
         <h2 className="loginHeading font-bold">Signup</h2>
         <p className="loginPara">
@@ -82,12 +91,14 @@ const Signup = () => {
           <LoadingBar color="blue" ref={ref} />
         </div>
         <p className="loginBottomPara">
-          <a href="/login">Click here to go to login</a>
+          <span onClick={() => navigate("/login")}>
+            Click here to go to login
+          </span>
         </p>
         <ToastContainer />
       </div>
-    </div>
-  )
-}
+    </motion.div>
+  );
+};
 
-export default Signup
+export default Signup;
