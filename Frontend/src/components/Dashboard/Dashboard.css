@@ -11,12 +11,14 @@
 }
 
 .dashboard-header h1 {
-  color: #1a202c; /* Dark text color for the heading */
+  color: #1a202c;
+  font-size: 1.5rem;
 }
 
 .search-bar {
   position: relative;
   border: 1px solid rgba(245, 245, 247, 1);
+  margin-bottom: 1rem;
 }
 
 .search-bar input {
@@ -349,31 +351,35 @@
 }
 
 
-.custom-button {
-  background-color: transparent;
-  color: #4a5568;
-  border: 1px solid #4a5568;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
 
-.custom-button:hover {
-  background-color: #4a5568;
-  color: #ffffff;
-}
 
-.custom-button svg {
-  margin-right: 0.5rem;
-}
+@media (max-width: 768px) {
+  .table-list-mb {
+    overflow-x: auto;
+  }
 
-.custom-button span {
-  margin-left: 0.5rem;
-}
+  .table-list th,
+  .table-list td {
+    font-size: 0.8rem; /* Adjust font size for smaller screens */
+  }
 
-.custom-button .arrow-icon {
-  margin-left: auto;
+  .channel-heading {
+    overflow-x: auto; /* Enable horizontal scrolling for channel heading */
+    margin-bottom: 0.5rem; /* Add some space below the heading */
+    background: transparent;
+  }
+
+  .channel-heading h3 {
+    font-size: 1rem; /* Adjust font size for smaller screens */
+  }
+
+  .date-button svg,
+  .range-text{
+    display: none;
+  }
+
+
+  .rdrDefinedRangesWrapper{
+    display: none;
+  }
 }
