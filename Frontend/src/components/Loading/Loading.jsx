@@ -13,6 +13,7 @@ const Loading = () => {
           {/* You can also use variants for more complex animations */}
         </motion.div>
       </div>
+      <div className="loading-text">Loading</div>
     </div>
   );
 };

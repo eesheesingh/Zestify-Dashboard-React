@@ -25,7 +25,7 @@ const Dashboard = ({ chatMembers }) => {
 
   const [inputValues, setInputValues] = useState({});
 
-  const [open, setOpen] = useState(false);  // Added open state
+  const [open, setOpen] = useState(false); // Added open state
 
   const navigate = useNavigate();
 
@@ -42,14 +42,13 @@ const Dashboard = ({ chatMembers }) => {
   };
 
   const handleRequest = (link) => {
-    navigate("/requests", {state: { chatLink: link }});
-  }
+    navigate("/requests", { state: { chatLink: link } });
+  };
 
   const handleClick = (event, linkId) => {
     setAnchorEl(event.currentTarget);
 
-
-    setOpen(true);  // Update: Set open to true when opening the Popover
+    setOpen(true); // Update: Set open to true when opening the Popover
 
     setLinkDateRanges((prevState) => ({
       ...prevState,
@@ -61,40 +60,35 @@ const Dashboard = ({ chatMembers }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
-    setOpen(false); 
+    setOpen(false);
   };
 
   const handleInputValue = (e, linkId) => {
-    setInputValues(prevInputValues => ({
-        ...prevInputValues,
-        [linkId]: e.target.value
+    setInputValues((prevInputValues) => ({
+      ...prevInputValues,
+      [linkId]: e.target.value,
     }));
-};
+  };
 
-const handleInputSubmit = (e, linkId) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        const chatId = inputValues[linkId];
-        console.log('Link', linkId, ':', chatId);
-        fetch(
-          "http://localhost:5000/api/chatMembers/requestId",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ linkId, chatId }),
-          }
-        );
-        setInputValues(prevInputValues => ({
-            ...prevInputValues,
-            [linkId]: ''
-        }));
+  const handleInputSubmit = (e, linkId) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const chatId = inputValues[linkId];
+      fetch("http://localhost:5000/api/chatMembers/requestId", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ linkId, chatId }),
+      });
+      setInputValues((prevInputValues) => ({
+        ...prevInputValues,
+        [linkId]: "",
+      }));
     }
-};
+  };
 
   useEffect(() => {
-    // Update notification count whenever hasNotification changes
     setNotificationCount(hasNotification ? 5 : 0);
   }, []);
 
@@ -201,18 +195,49 @@ const handleInputSubmit = (e, linkId) => {
                             className="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             placeholder="Enter ID"
-                            value={inputValues[link.chatLink === "None" ? `${channel.channelName}-None` : link.chatLink] || ''}
-                            onChange={(e) => handleInputValue(e, link.chatLink === "None" ? `${channel.channelName}-None`:link.chatLink)}
-                            onKeyDown={(e) => handleInputSubmit(e, link.chatLink === "None" ? `${channel.channelName}-None`:link.chatLink)}
+                            value={
+                              inputValues[
+                                link.chatLink === "None"
+                                  ? `${channel.channelName}-None`
+                                  : link.chatLink
+                              ] || ""
+                            }
+                            onChange={(e) =>
+                              handleInputValue(
+                                e,
+                                link.chatLink === "None"
+                                  ? `${channel.channelName}-None`
+                                  : link.chatLink
+                              )
+                            }
+                            onKeyDown={(e) =>
+                              handleInputSubmit(
+                                e,
+                                link.chatLink === "None"
+                                  ? `${channel.channelName}-None`
+                                  : link.chatLink
+                              )
+                            }
                           />
-                          <button onClick={() => handleRequest(link.chatLink === "None" ? `${channel.channelName}-None`:link.chatLink )}>
+                          <button
+                            onClick={() =>
+                              handleRequest(
+                                link.chatLink === "None"
+                                  ? `${channel.channelName}-None`
+                                  : link.chatLink
+                              )
+                            }
+                          >
                             <span className="eye-icon">
                               <GoEye
-                              style={{
-                                cursor:
-                                  notificationCount > 0 ? "pointer" : "not-allowed", opacity: notificationCount > 0 ? 1 : 0.5,
-                              }}
-                            />
+                                style={{
+                                  cursor:
+                                    notificationCount > 0
+                                      ? "pointer"
+                                      : "not-allowed",
+                                  opacity: notificationCount > 0 ? 1 : 0.5,
+                                }}
+                              />
                             </span>
                           </button>
                         </div>
