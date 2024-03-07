@@ -57,7 +57,11 @@ router.get("/overview", async (req, res) => {
 
     const chatMembers = await ChatMember.aggregate([
       { $unwind: "$members" },
-      { $match: { "members.chatLink": { $in: chatLinks } } },
+      {
+        $match: {
+          $or: [{ "members.chatLink": { $in: chatLinks } }],
+        },
+      },
       {
         $group: {
           _id: "$channelName",
@@ -65,32 +69,18 @@ router.get("/overview", async (req, res) => {
           chatMembers: {
             $push: {
               chatLink: "$members.chatLink",
-              joinedAt: {
-                $cond: [
-                  { $eq: ["$members.chatLink", "$members.chatLink"] },
-                  "$members.joinedAt",
-                  null
-                ]
-              },
-              leftAt: {
-                $cond: [
-                  { $eq: ["$members.chatLink", "$members.chatLink"] },
-                  "$members.leftAt",
-                  null
-                ]
-              }
-            }
-          }
-        }
-      }
-    ]);    
+              joinedAt: "$members.joinedAt",
+              leftAt: "$members.leftAt",
+            },
+          },
+        },
+      },
+    ]);
 
     if (chatMembers.length === 0) {
-      return res
-        .status(404)
-        .json({
-          message: "No chat member data found for the associated chatLinks",
-        });
+      return res.status(404).json({
+        message: "No chat member data found for the associated chatLinks",
+      });
     }
 
     res.json(chatMembers);
@@ -226,11 +216,9 @@ router.post("/saveAdCost", async (req, res) => {
         chatLink,
         adCost: [{ adCost, date: dateObject }],
       });
-      res
-        .status(200)
-        .json({
-          message: `New chat link and ad cost saved successfully for ${chatLink}`,
-        });
+      res.status(200).json({
+        message: `New chat link and ad cost saved successfully for ${chatLink}`,
+      });
     }
   } catch (error) {
     console.error(error);
