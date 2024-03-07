@@ -168,7 +168,8 @@
   }
 
   .edit-button {
-    background-color: #3498db;
+    width: 100%; /* Set the width to 100% */
+    background-color: #000;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -178,8 +179,16 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
   
+  .editable-input {
+    width: 100%; /* Set the width to 100% */
+    padding: 2px 5px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+  
   .edit-button:hover {
-    background-color: #2980b9;
+    background-color: #2561ed;
   }
 
   .editable-info {
@@ -191,13 +200,7 @@
     align-items: center;
   }
 
-  .editable-input {
-    padding: 2px 5px;
-    border: 1px solid #3498db;
-    border-radius: 4px;
-    margin-top: 4px;
-    width: 60%;
-  }
+
 
   .MdLock {
     margin-left: 10px;

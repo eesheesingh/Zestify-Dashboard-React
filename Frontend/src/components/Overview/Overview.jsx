@@ -10,6 +10,26 @@ import { IoFilter } from "react-icons/io5";
 import Loading from "../Loading/Loading";
 import "./Overview.css";
 
+const CustomButton = ({ onClick }) => {
+  return (
+    <Button
+      onClick={onClick}
+      style={{
+        backgroundColor: "transparent",
+        color: "#4a5568",
+        border: "1px solid #4a5568",
+        borderRadius: "8px",
+      }}
+    >
+      <BsCalendarDateFill />
+      <span style={{ marginLeft: "0.5rem", textTransform: "none" }}>
+        Date <span className="range-text"> Range</span>
+      </span>
+      <MdKeyboardArrowDown />
+    </Button>
+  );
+};
+
 const Overview = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [hasNotification, setHasNotification] = useState(false);

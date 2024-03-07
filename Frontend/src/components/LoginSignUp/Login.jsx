@@ -1,5 +1,4 @@
 // Login.js
-
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import "./Login.css";
@@ -9,8 +8,6 @@ import LoadingBar from "react-top-loading-bar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
-
-
 
 const Login = ({ setChatMembers }) => {
   const [inputValue, setInputValue] = useState("");

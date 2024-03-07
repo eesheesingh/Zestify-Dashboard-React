@@ -1,5 +1,3 @@
-/* Add this to your Dashboard.css file */
-
 /* Overview Table Styles */
 .overview-table-container {
     margin: 20px;
@@ -100,3 +98,32 @@
     margin-left: auto;
   }
   
+
+  @media (max-width: 768px) {
+    .p-0 {
+      padding: 0;
+    }
+  
+    .sm\:ml-60 {
+      margin-left: 0;
+    }
+  
+    .overview-heading {
+      font-size: 1.5rem; /* Adjust the font size as needed for mobile */
+    }
+  
+    .overview-table-container {
+      margin: 10px; /* Adjust the margin for better spacing on mobile */
+      overflow-x: auto; /* Add overflow-x for horizontal scrolling on small screens */
+    }
+  
+    .overview-table th,
+    .overview-table td {
+      font-size: 0.9rem; /* Adjust the font size for mobile */
+      padding: 0.8rem;
+    }
+  
+    .date-range-picker-button {
+      font-size: 0.8rem; /* Adjust the font size for mobile */
+    }
+  }
