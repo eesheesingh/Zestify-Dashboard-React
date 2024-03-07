@@ -191,7 +191,7 @@ const Overview = () => {
                               onClose={handleClose}
                               anchorOrigin={{
                                 vertical: "bottom",
-                                horizontal: "left",
+                                horizontal: "right",
                               }}
                               transformOrigin={{
                                 vertical: "top",
@@ -199,7 +199,6 @@ const Overview = () => {
                               }}
                             >
                               <DateRangePicker
-                                key={`${index}-${subIndex}`}
                                 onChange={handleSelect}
                                 showSelectionPreview={true}
                                 moveRangeOnFirstSelection={false}
