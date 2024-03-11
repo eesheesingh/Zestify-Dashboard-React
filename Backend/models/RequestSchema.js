@@ -8,6 +8,8 @@ const requestSchema = new mongoose.Schema({
     }]
 });
 
+requestSchema.index({chatLink: 1, "chatIds.chatId": 1});
+
 const Request = mongoose.model("Request", requestSchema);
 
 module.exports = Request;

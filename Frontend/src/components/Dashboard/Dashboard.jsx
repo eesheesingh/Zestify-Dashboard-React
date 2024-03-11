@@ -15,6 +15,7 @@ import { GoEye } from "react-icons/go";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../Header/Header";
+import { ToastContainer, toast } from "react-toastify";
 
 const Dashboard = ({ chatMembers }) => {
   const [hasNotification, setHasNotification] = useState(true);
@@ -70,23 +71,45 @@ const Dashboard = ({ chatMembers }) => {
     }));
   };
 
-  const handleInputSubmit = (e, linkId) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const chatId = inputValues[linkId];
-      fetch("http://localhost:5000/api/chatMembers/requestId", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ linkId, chatId }),
-      });
-      setInputValues((prevInputValues) => ({
-        ...prevInputValues,
-        [linkId]: "",
-      }));
-    }
-  };
+  const handleError = (err) =>
+    toast.info(err, {
+      position: "bottom-left",
+    });
+  const handleSuccess = (message) =>
+    toast.success(message, {
+      position: "bottom-left",
+    });
+
+    const handleInputSubmit = async (e, linkId) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const chatId = inputValues[linkId];
+    
+        try {
+          const response = await fetch("http://localhost:5000/api/chatMembers/requestId", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ linkId, chatId }),
+          });
+          const data = await response.json();
+    
+          if (!response.ok) {
+            throw new Error(data.message);
+          }
+    
+          handleSuccess(data.message || "Chat ID submitted successfully!");
+    
+          setInputValues((prevInputValues) => ({
+            ...prevInputValues,
+            [linkId]: "",
+          }));
+        } catch (error) {
+          handleError(error.message);
+        }
+      }
+    };
 
   useEffect(() => {
     setNotificationCount(hasNotification ? 5 : 0);
@@ -333,6 +356,7 @@ const Dashboard = ({ chatMembers }) => {
           ))}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

@@ -10,26 +10,6 @@ import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const CustomButton = ({ onClick }) => {
-  return (
-    <Button
-      onClick={onClick}
-      style={{
-        backgroundColor: "transparent",
-        color: "#4a5568",
-        border: "1px solid #4a5568",
-        borderRadius: "8px",
-      }}
-    >
-      <BsCalendarDateFill />
-      <span style={{ marginLeft: "0.5rem", textTransform: "none" }}>
-        Date <span className="range-text">Range</span> 
-      </span>
-      <MdKeyboardArrowDown />
-    </Button>
-  );
-};
-
 const Request = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -60,20 +40,23 @@ const Request = () => {
 
   const handleRemove = async (requestId, chatId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/chatMembers/removeChatId`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ requestId, chatId })
-      });
-      
+      const response = await fetch(
+        `http://localhost:5000/api/chatMembers/removeChatId`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ requestId, chatId }),
+        }
+      );
+
       if (!response.ok) {
-        throw new Error('Failed to remove chatId');
+        throw new Error("Failed to remove chatId");
       }
       fetchData();
     } catch (error) {
-      console.error('Failed to remove chatId:', error);
+      console.error("Failed to remove chatId:", error);
     }
   };
 
@@ -152,7 +135,9 @@ const Request = () => {
           <div className="AgencyOptions flex text-neutral-600">
             <h3 className="mr-2 channel-heads">Overview Request:</h3>
             {requests.map((request, index) => (
-            <span key={index} className="requests-num font-bold">{request.chatIds.length || 0}</span>
+              <span key={index} className="requests-num font-bold">
+                {request.chatIds.length || 0}
+              </span>
             ))}
           </div>
 
@@ -162,7 +147,21 @@ const Request = () => {
               Filter:
             </div>
             <div className="date-range px-1">
-              <CustomButton onClick={handleClick} />
+              <Button
+                onClick={handleClick}
+                style={{
+                  backgroundColor: "transparent",
+                  color: "#4a5568",
+                  border: "1px solid #4a5568",
+                  borderRadius: "8px",
+                }}
+              >
+                <BsCalendarDateFill />
+                <span style={{ marginLeft: "0.5rem", textTransform: "none" }}>
+                  Date Range
+                </span>
+                <MdKeyboardArrowDown />
+              </Button>
               <Popover
                 open={open}
                 anchorEl={anchorEl}
@@ -206,7 +205,11 @@ const Request = () => {
                     <td>{formatDate(chat.createdAt)}</td>
                     <td>{chat.chatId}</td>
                     <td>
-                      <button onClick={() => handleRemove(request._id, chat.chatId)}>Remove</button>
+                      <button
+                        onClick={() => handleRemove(request._id, chat.chatId)}
+                      >
+                        Remove
+                      </button>
                     </td>
                   </tr>
                 ))
